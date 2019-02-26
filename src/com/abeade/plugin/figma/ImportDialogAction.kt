@@ -1,5 +1,6 @@
 package com.abeade.plugin.figma
 
+import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
@@ -21,7 +22,11 @@ class ImportDialogAction : AnAction() {
                 (psiElement as? PsiJavaDirectoryImpl)?.name == RES_DIRECTORY
     }
 
-    override fun actionPerformed(e: AnActionEvent) {
-        // TODO: insert action logic here
+    override fun actionPerformed(anActionEvent: AnActionEvent) {
+        val dialog = ImportDialogWrapper(PropertiesComponent.getInstance())
+        val result = dialog.showAndGet()
+        if (result) {
+            System.out.println(dialog.file.toString())
+        }
     }
 }
