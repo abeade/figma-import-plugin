@@ -32,6 +32,24 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
 
     var file: File? = null
 
+    val ldpiPrefix: String
+        get() = ldpiField.text
+
+    val mdpiPrefix: String
+        get() = mdpiField.text
+
+    val hdpiPrefix: String
+        get() = hdpiField.text
+
+    val xhdpiPrefix: String
+        get() = xhdpiField.text
+
+    val xxhdpiPrefix: String
+        get() = xxhdpiField.text
+
+    val xxxhdpiPrefix: String
+        get() = xxxhdpiField.text
+
     private lateinit var fileField: JTextField
     private lateinit var ldpiField: JTextField
     private lateinit var mdpiField: JTextField
