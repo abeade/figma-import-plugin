@@ -4,6 +4,7 @@ import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.layout.panel
 import java.io.File
+import java.util.zip.ZipFile
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 import javax.swing.JFileChooser
@@ -35,7 +36,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
 
     private var data: ImportData? = null
     private var file: File? = null
+    private lateinit var zipFilesList: MutableList<String>
+    private var resource: String? = null
+
     private lateinit var fileField: JTextField
+    private lateinit var resourceField: JTextField
     private lateinit var ldpiField: JTextField
     private lateinit var mdpiField: JTextField
     private lateinit var hdpiField: JTextField
@@ -58,6 +63,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
 
         rememberCheckBox = JCheckBox().apply { isSelected = savehdpi }
         fileField = JTextField(String.empty).apply { isEditable = false }
+        resourceField = JTextField(String.empty)
         ldpiField = JTextField(ldpi)
         mdpiField = JTextField(mdpi)
         hdpiField = JTextField(hdpi)
@@ -69,7 +75,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             noteRow("Select zip file with figma exported resources")
             row("File:") { fileField() }
             row(String.empty) { button("Select file") { openFile(directory) } }
-            noteRow("Select the suffixes used for each density (empty densities should be skipped)")
+            row("Resource name:") { resourceField() }
+            noteRow("Select the suffixes used for each density (empty densities will be skipped)")
             row("ldpi suffix:") { ldpiField() }
             row("mdpi suffix:") { mdpiField() }
             row("hdpi suffix:") { hdpiField() }
@@ -78,7 +85,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             row("xxxhdpi suffix:") { xxxhdpiField() }
             row("Remember suffixes") { rememberCheckBox() }
             row { }
-            noteRow("""Do you like this plugin? <a href="https://github.com/abeade/figma-import-plugin">Star the repo and/or contribute</a>""")
+            noteRow("""Do you like this plugin? <a href="https://github.com/abeade/figma-import-plugin">Star the repo and contribute</a>""")
         }
     }
 
@@ -116,6 +123,19 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         if (result == JFileChooser.APPROVE_OPTION) {
             file = fileDialog.selectedFile
             fileField.text = file.toString()
+            val zipFile = ZipFile(file)
+            zipFilesList = zipFile.entries().asIterator().asSequence().fold(mutableListOf()) { list, entry ->
+                list.apply { add(entry.name) }
+            }
+            resource = when {
+                zipFilesList.size > 1 ->
+                    zipFilesList.subList(1, zipFilesList.size).fold(zipFilesList[0]) { prefix, item ->
+                        prefix.commonPrefixWith(item)
+                    }
+                zipFilesList.size > 0 -> zipFilesList[0]
+                else -> String.empty
+            }.replace("[^A-Za-z0-9_]".toRegex(), String.empty).toLowerCase()
+            resourceField.text = resource
         }
     }
 }
