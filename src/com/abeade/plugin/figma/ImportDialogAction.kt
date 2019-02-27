@@ -1,6 +1,9 @@
 package com.abeade.plugin.figma
 
 import com.intellij.ide.util.PropertiesComponent
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationType
+import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
@@ -26,7 +29,7 @@ class ImportDialogAction : AnAction() {
         val dialog = ImportDialogWrapper(PropertiesComponent.getInstance())
         val result = dialog.showAndGet()
         if (result) {
-            System.out.println(dialog.importData?.toString())
+            Notifications.Bus.notify(Notification("Figma import", "Figma import", dialog.importData!!.toString(), NotificationType.INFORMATION))
         }
     }
 }

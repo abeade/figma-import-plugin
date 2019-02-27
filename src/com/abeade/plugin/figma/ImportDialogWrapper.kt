@@ -2,13 +2,14 @@ package com.abeade.plugin.figma
 
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.layout.panel
+import java.awt.Color
 import java.io.File
 import java.util.zip.ZipFile
-import javax.swing.JCheckBox
-import javax.swing.JComponent
-import javax.swing.JFileChooser
-import javax.swing.JTextField
+import javax.swing.*
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 import javax.swing.filechooser.FileNameExtensionFilter
 
 class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) : DialogWrapper(true) {
@@ -35,8 +36,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         get() = data
 
     private var data: ImportData? = null
+    private var result = mutableMapOf<String, String>()
     private var file: File? = null
-    private lateinit var zipFilesList: MutableList<String>
+    private var zipFilesList: MutableList<String>? = null
     private var resource: String? = null
 
     private lateinit var fileField: JTextField
@@ -49,6 +51,13 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     private lateinit var xxxhdpiField: JTextField
     private lateinit var rememberCheckBox: JCheckBox
 
+    private lateinit var ldpiLabel: JLabel
+    private lateinit var mdpiLabel: JLabel
+    private lateinit var hdpiLabel: JLabel
+    private lateinit var xhdpiLabel: JLabel
+    private lateinit var xxhdpiLabel: JLabel
+    private lateinit var xxxhdpiLabel: JLabel
+
     override fun getDimensionServiceKey(): String? = DIMENSION_SERVICE_KEY
 
     override fun createCenterPanel(): JComponent {
@@ -58,18 +67,103 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val xhdpi = propertiesComponent.getValue(XHDPI_KEY).orEmpty()
         val xxhdpi = propertiesComponent.getValue(XXHDPI_KEY).orEmpty()
         val xxxhdpi = propertiesComponent.getValue(XXXHDPI_KEY).orEmpty()
-        val savehdpi = propertiesComponent.getBoolean(SAVE_KEY)
+        val saveDensities = propertiesComponent.getBoolean(SAVE_KEY)
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
 
-        rememberCheckBox = JCheckBox().apply { isSelected = savehdpi }
+        rememberCheckBox = JCheckBox().apply { isSelected = saveDensities }
         fileField = JTextField(String.empty).apply { isEditable = false }
         resourceField = JTextField(String.empty)
-        ldpiField = JTextField(ldpi)
-        mdpiField = JTextField(mdpi)
-        hdpiField = JTextField(hdpi)
-        xhdpiField = JTextField(xhdpi)
-        xxhdpiField = JTextField(xxhdpi)
-        xxxhdpiField = JTextField(xxxhdpi)
+        ldpiField = JTextField(ldpi).apply { document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun insertUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun removeUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+        }) }
+        mdpiField = JTextField(mdpi).apply { document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun insertUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun removeUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+        }) }
+        hdpiField = JTextField(hdpi).apply { document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun insertUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun removeUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+        }) }
+        xhdpiField = JTextField(xhdpi).apply { document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun insertUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun removeUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+        }) }
+        xxhdpiField = JTextField(xxhdpi).apply { document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun insertUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun removeUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+        }) }
+        xxxhdpiField = JTextField(xxxhdpi).apply { document.addDocumentListener(object : DocumentListener {
+            override fun changedUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun insertUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+            override fun removeUpdate(p0: DocumentEvent?) {
+                updateLabels()
+            }
+
+        }) }
+
+        ldpiLabel = JLabel("ldpi suffix:")
+        mdpiLabel = JLabel("mdpi suffix:")
+        hdpiLabel = JLabel("hdpi suffix:")
+        xhdpiLabel = JLabel("xhdpi suffix:")
+        xxhdpiLabel = JLabel("xxhdpi suffix:")
+        xxxhdpiLabel = JLabel("xxxhdpi suffix:")
 
         return panel {
             noteRow("Select zip file with figma exported resources")
@@ -77,28 +171,38 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             row(String.empty) { button("Select file") { openFile(directory) } }
             row("Resource name:") { resourceField() }
             noteRow("Select the suffixes used for each density (empty densities will be skipped)")
-            row("ldpi suffix:") { ldpiField() }
-            row("mdpi suffix:") { mdpiField() }
-            row("hdpi suffix:") { hdpiField() }
-            row("xhdpi suffix:") { xhdpiField() }
-            row("xxhdpi suffix:") { xxhdpiField() }
-            row("xxxhdpi suffix:") { xxxhdpiField() }
+            row {
+                ldpiLabel()
+                ldpiField()
+            }
+            row {
+                mdpiLabel()
+                mdpiField()
+            }
+            row {
+                hdpiLabel()
+                hdpiField()
+            }
+            row {
+                xhdpiLabel()
+                xhdpiField()
+            }
+            row {
+                xxhdpiLabel()
+                xxhdpiField()
+            }
+            row {
+                xxxhdpiLabel()
+                xxxhdpiField()
+            }
             row("Remember suffixes") { rememberCheckBox() }
             row { }
-            noteRow("""Do you like this plugin? <a href="https://github.com/abeade/figma-import-plugin">Star the repo and contribute</a>""")
+            noteRow("""More info in <a href="https://github.com/abeade/figma-import-plugin">github repo</a>""")
         }
     }
 
     override fun doOKAction() {
-        data = ImportData(
-            file,
-            ldpiField.text,
-            mdpiField.text,
-            hdpiField.text,
-            xhdpiField.text,
-            xxhdpiField.text,
-            xxxhdpiField.text
-        )
+        data = ImportData(file, result)
         val remember = rememberCheckBox.isSelected
         propertiesComponent.setValue(LDPI_KEY, if (remember) ldpiField.text else null)
         propertiesComponent.setValue(MDPI_KEY, if (remember) mdpiField.text else null)
@@ -109,6 +213,73 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         propertiesComponent.setValue(SAVE_KEY, remember)
         propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
         super.doOKAction()
+    }
+
+    override fun doValidate(): ValidationInfo? {
+        processResult()
+        return when {
+            fileField.text.isEmpty() -> ValidationInfo("Zip file required", fileField)
+            resourceField.text.isBlank() -> ValidationInfo("Resource name required", resourceField)
+            ldpiField.text.isBlank() && mdpiField.text.isBlank() && hdpiField.text.isBlank()
+                    && xhdpiField.text.isBlank() && xxhdpiField.text.isBlank() && xxxhdpiField.text.isBlank() ->
+                ValidationInfo("At least one density prefix should be defined")
+            result.isEmpty() -> ValidationInfo("No resource matches!! Review the prefixes")
+            else -> null
+        }
+    }
+
+    private fun processResult() {
+        result.clear()
+        zipFilesList?.forEach {
+            addFieldToResult(it, ldpiField.text, "drawable-ldpi")
+            addFieldToResult(it, mdpiField.text, "drawable-mdpi")
+            addFieldToResult(it, hdpiField.text, "drawable-hdpi")
+            addFieldToResult(it, xhdpiField.text, "drawable-xhdpi")
+            addFieldToResult(it, xxhdpiField.text, "drawable-xxhdpi")
+            addFieldToResult(it, xxxhdpiField.text, "drawable-xxxhdpi")
+        }
+    }
+
+    private fun addFieldToResult(fileName: String, suffix: String, folder: String) {
+        if (suffix.isNotBlank() && fileName.substringBeforeLast('.').endsWith(suffix)) {
+            result[fileName] = folder
+        }
+    }
+
+    private fun updateLabels() {
+        updateLabelField(ldpiLabel, ldpiField)
+        updateLabelField(mdpiLabel, mdpiField)
+        updateLabelField(hdpiLabel, hdpiField)
+        updateLabelField(xhdpiLabel, xhdpiField)
+        updateLabelField(xxhdpiLabel, xxhdpiField)
+        updateLabelField(xxxhdpiLabel, xxxhdpiField)
+        zipFilesList?.let {
+            updateLabelFile(ldpiLabel, ldpiField, it)
+            updateLabelFile(mdpiLabel, mdpiField, it)
+            updateLabelFile(hdpiLabel, hdpiField, it)
+            updateLabelFile(xhdpiLabel, xhdpiField, it)
+            updateLabelFile(xxhdpiLabel, xxhdpiField, it)
+            updateLabelFile(xxhdpiLabel, xxhdpiField, it)
+        }
+    }
+
+    private fun updateLabelFile(label: JLabel, field: JTextField, filesList: MutableList<String>) {
+        val suffix = field.text
+        if (!suffix.isBlank()) {
+            if (filesList.any { it.substringBeforeLast('.').endsWith(suffix) }) {
+                label.foreground = Color.GREEN
+            } else {
+                label.foreground = Color.RED
+            }
+        }
+    }
+
+    private fun updateLabelField(label: JLabel, field: JTextField) {
+        if (field.text.isBlank()) {
+            label.foreground = Color.LIGHT_GRAY
+        } else {
+            label.foreground = Color.BLACK
+        }
     }
 
     private fun openFile(directory: String?) {
@@ -127,15 +298,17 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             zipFilesList = zipFile.entries().asIterator().asSequence().fold(mutableListOf()) { list, entry ->
                 list.apply { add(entry.name) }
             }
-            resource = when {
-                zipFilesList.size > 1 ->
-                    zipFilesList.subList(1, zipFilesList.size).fold(zipFilesList[0]) { prefix, item ->
-                        prefix.commonPrefixWith(item)
-                    }
-                zipFilesList.size > 0 -> zipFilesList[0]
-                else -> String.empty
-            }.replace("[^A-Za-z0-9_]".toRegex(), String.empty).toLowerCase()
-            resourceField.text = resource
+            zipFilesList?.let {
+                resource = when {
+                    it.size > 1 ->
+                        it.subList(1, it.size).fold(it[0]) { prefix, item -> prefix.commonPrefixWith(item) }
+                                .plus(it[0].substring(it[0].lastIndexOf('.')))
+                    it.size > 0 -> it[0]
+                    else -> String.empty
+                }.replace("[^A-Za-z0-9_\\.]".toRegex(), String.empty).toLowerCase()
+                resourceField.text = resource
+            }
+            updateLabels()
         }
     }
 }
