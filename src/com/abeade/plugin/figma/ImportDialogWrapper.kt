@@ -10,7 +10,6 @@ import javax.swing.JFileChooser
 import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
 
-
 class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) : DialogWrapper(true) {
 
     private companion object {
@@ -22,6 +21,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         private const val XXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxhpdi"
         private const val XXXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxxhpdi"
         private const val SAVE_KEY = "#com.abeade.plugin.figma.importDialog.savehdpi"
+        private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
         private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
     }
 
@@ -30,26 +30,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         title = "Import figma resources"
     }
 
-    var file: File? = null
+    val importData: ImportData?
+        get() = data
 
-    val ldpiPrefix: String
-        get() = ldpiField.text
-
-    val mdpiPrefix: String
-        get() = mdpiField.text
-
-    val hdpiPrefix: String
-        get() = hdpiField.text
-
-    val xhdpiPrefix: String
-        get() = xhdpiField.text
-
-    val xxhdpiPrefix: String
-        get() = xxhdpiField.text
-
-    val xxxhdpiPrefix: String
-        get() = xxxhdpiField.text
-
+    private var data: ImportData? = null
+    private var file: File? = null
     private lateinit var fileField: JTextField
     private lateinit var ldpiField: JTextField
     private lateinit var mdpiField: JTextField
@@ -62,13 +47,14 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     override fun getDimensionServiceKey(): String? = DIMENSION_SERVICE_KEY
 
     override fun createCenterPanel(): JComponent {
-        val ldpi = propertiesComponent.getValue(LDPI_KEY) ?: ""
-        val mdpi = propertiesComponent.getValue(MDPI_KEY) ?: ""
-        val hdpi = propertiesComponent.getValue(HDPI_KEY) ?: ""
-        val xhdpi = propertiesComponent.getValue(XHDPI_KEY) ?: ""
-        val xxhdpi = propertiesComponent.getValue(XXHDPI_KEY) ?: ""
-        val xxxhdpi = propertiesComponent.getValue(XXXHDPI_KEY) ?: ""
+        val ldpi = propertiesComponent.getValue(LDPI_KEY).orEmpty()
+        val mdpi = propertiesComponent.getValue(MDPI_KEY).orEmpty()
+        val hdpi = propertiesComponent.getValue(HDPI_KEY).orEmpty()
+        val xhdpi = propertiesComponent.getValue(XHDPI_KEY).orEmpty()
+        val xxhdpi = propertiesComponent.getValue(XXHDPI_KEY).orEmpty()
+        val xxxhdpi = propertiesComponent.getValue(XXXHDPI_KEY).orEmpty()
         val savehdpi = propertiesComponent.getBoolean(SAVE_KEY)
+        val directory = propertiesComponent.getValue(DIRECTORY_KEY)
 
         rememberCheckBox = JCheckBox().apply { isSelected = savehdpi }
         fileField = JTextField("").apply { isEditable = false }
@@ -82,20 +68,29 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         return panel {
             noteRow("Select zip file with figma exported resources")
             row("File:") { fileField() }
-            row("") { button("Select file") { openFile() } }
-            noteRow("Select the prefixes used for each density (empty densities should be skipped)")
-            row("ldpi prefix:") { ldpiField() }
-            row("mdpi prefix:") { mdpiField() }
-            row("hdpi prefix:") { hdpiField() }
-            row("xhdpi prefix:") { xhdpiField() }
-            row("xxhdpi prefix:") { xxhdpiField() }
-            row("xxxhdpi prefix:") { xxxhdpiField() }
-            row("Remember prefixes") { rememberCheckBox() }
+            row("") { button("Select file") { openFile(directory) } }
+            noteRow("Select the suffixes used for each density (empty densities should be skipped)")
+            row("ldpi suffix:") { ldpiField() }
+            row("mdpi suffix:") { mdpiField() }
+            row("hdpi suffix:") { hdpiField() }
+            row("xhdpi suffix:") { xhdpiField() }
+            row("xxhdpi suffix:") { xxhdpiField() }
+            row("xxxhdpi suffix:") { xxxhdpiField() }
+            row("Remember suffixes") { rememberCheckBox() }
             noteRow("""Do not have an account? <a href="https://account.jetbrains.com/login">Sign Up</a>""")
         }
     }
 
     override fun doOKAction() {
+        data = ImportData(
+            file,
+            ldpiField.text,
+            mdpiField.text,
+            hdpiField.text,
+            xhdpiField.text,
+            xxhdpiField.text,
+            xxxhdpiField.text
+        )
         if (rememberCheckBox.isSelected) {
             propertiesComponent.setValue(LDPI_KEY, ldpiField.text)
             propertiesComponent.setValue(MDPI_KEY, mdpiField.text)
@@ -104,6 +99,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             propertiesComponent.setValue(XXHDPI_KEY, xxhdpiField.text)
             propertiesComponent.setValue(XXXHDPI_KEY, xxxhdpiField.text)
             propertiesComponent.setValue(SAVE_KEY, true)
+            propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
         } else {
             propertiesComponent.setValue(LDPI_KEY, null)
             propertiesComponent.setValue(MDPI_KEY, null)
@@ -116,8 +112,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         super.doOKAction()
     }
 
-    private fun openFile() {
+    private fun openFile(directory: String?) {
         val fileDialog = JFileChooser().apply {
+            directory?.let { currentDirectory = File(directory) }
             fileSelectionMode = JFileChooser.FILES_ONLY
             fileFilter = FileNameExtensionFilter("ZIP Files", "zip", "zip")
             isAcceptAllFileFilterUsed = false

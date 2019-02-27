@@ -26,13 +26,7 @@ class ImportDialogAction : AnAction() {
         val dialog = ImportDialogWrapper(PropertiesComponent.getInstance())
         val result = dialog.showAndGet()
         if (result) {
-            System.out.println(dialog.file.toString())
-            System.out.println(dialog.ldpiPrefix)
-            System.out.println(dialog.mdpiPrefix)
-            System.out.println(dialog.hdpiPrefix)
-            System.out.println(dialog.xhdpiPrefix)
-            System.out.println(dialog.xxhdpiPrefix)
-            System.out.println(dialog.xxxhdpiPrefix)
+            System.out.println(dialog.importData?.toString())
         }
     }
 }
