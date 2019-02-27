@@ -57,7 +57,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
 
         rememberCheckBox = JCheckBox().apply { isSelected = savehdpi }
-        fileField = JTextField("").apply { isEditable = false }
+        fileField = JTextField(String.empty).apply { isEditable = false }
         ldpiField = JTextField(ldpi)
         mdpiField = JTextField(mdpi)
         hdpiField = JTextField(hdpi)
@@ -68,7 +68,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         return panel {
             noteRow("Select zip file with figma exported resources")
             row("File:") { fileField() }
-            row("") { button("Select file") { openFile(directory) } }
+            row(String.empty) { button("Select file") { openFile(directory) } }
             noteRow("Select the suffixes used for each density (empty densities should be skipped)")
             row("ldpi suffix:") { ldpiField() }
             row("mdpi suffix:") { mdpiField() }
@@ -77,7 +77,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             row("xxhdpi suffix:") { xxhdpiField() }
             row("xxxhdpi suffix:") { xxxhdpiField() }
             row("Remember suffixes") { rememberCheckBox() }
-            noteRow("""Do not have an account? <a href="https://account.jetbrains.com/login">Sign Up</a>""")
+            row { }
+            noteRow("""Do you like this plugin? <a href="https://github.com/abeade/figma-import-plugin">Star the repo and/or contribute</a>""")
         }
     }
 
@@ -91,24 +92,15 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             xxhdpiField.text,
             xxxhdpiField.text
         )
-        if (rememberCheckBox.isSelected) {
-            propertiesComponent.setValue(LDPI_KEY, ldpiField.text)
-            propertiesComponent.setValue(MDPI_KEY, mdpiField.text)
-            propertiesComponent.setValue(HDPI_KEY, hdpiField.text)
-            propertiesComponent.setValue(XHDPI_KEY, xhdpiField.text)
-            propertiesComponent.setValue(XXHDPI_KEY, xxhdpiField.text)
-            propertiesComponent.setValue(XXXHDPI_KEY, xxxhdpiField.text)
-            propertiesComponent.setValue(SAVE_KEY, true)
-            propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
-        } else {
-            propertiesComponent.setValue(LDPI_KEY, null)
-            propertiesComponent.setValue(MDPI_KEY, null)
-            propertiesComponent.setValue(HDPI_KEY, null)
-            propertiesComponent.setValue(XHDPI_KEY, null)
-            propertiesComponent.setValue(XXHDPI_KEY, null)
-            propertiesComponent.setValue(XXXHDPI_KEY, null)
-            propertiesComponent.setValue(SAVE_KEY, null)
-        }
+        val remember = rememberCheckBox.isSelected
+        propertiesComponent.setValue(LDPI_KEY, if (remember) ldpiField.text else null)
+        propertiesComponent.setValue(MDPI_KEY, if (remember) mdpiField.text else null)
+        propertiesComponent.setValue(HDPI_KEY, if (remember) hdpiField.text else null)
+        propertiesComponent.setValue(XHDPI_KEY, if (remember) xhdpiField.text else null)
+        propertiesComponent.setValue(XXHDPI_KEY, if (remember) xxhdpiField.text else null)
+        propertiesComponent.setValue(XXXHDPI_KEY, if (remember) xxxhdpiField.text else null)
+        propertiesComponent.setValue(SAVE_KEY, remember)
+        propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
         super.doOKAction()
     }
 

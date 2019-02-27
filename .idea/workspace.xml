@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1db85ebe-fe7c-4825-b09f-07cd4863be43" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/abeade/plugin/figma/Extensions.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction$Companion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/META-INF/figma-import-plugin.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,20 +19,20 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="2" />
-          <entry key="project.open.time.7" value="2" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.open.time.7" value="3" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Kotlin" value="375" />
-          <entry key="PLAIN_TEXT" value="48" />
+          <entry key="Kotlin" value="542" />
+          <entry key="PLAIN_TEXT" value="86" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CLASS" value="3" />
-          <entry key="Kotlin" value="1" />
+          <entry key="Kotlin" value="2" />
         </counts>
       </usages-collector>
     </session>
@@ -59,11 +60,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-322">
-              <caret line="57" selection-start-line="57" selection-end-line="57" />
+            <state relative-caret-position="458">
+              <caret line="85" column="26" lean-forward="true" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
               <folding>
                 <element signature="e#33#358#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/Extensions.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -139,6 +149,8 @@
         <option value="$PROJECT_DIR$/src/com/abeade/plugin/figma/SampleDialogWrapper.kt" />
         <option value="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportData.kt" />
         <option value="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt" />
+        <option value="$PROJECT_DIR$/src/com/abeade/plugin/figma/Extensions" />
+        <option value="$PROJECT_DIR$/src/com/abeade/plugin/figma/Extensions.kt" />
         <option value="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt" />
       </list>
     </option>
@@ -199,12 +211,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551274426269" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551275770900" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
@@ -263,13 +275,21 @@
       <option name="project" value="LOCAL" />
       <updated>1551274446633</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Remove out directory and ignore it">
+      <created>1551274797227</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1551274797227</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="25" width="1920" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23959444" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24226254" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -278,14 +298,14 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32777777" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32777777" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3988889" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="9" visible="true" weight="0.3288889" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32777777" />
       <window_info anchor="bottom" id="Messages" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -303,7 +323,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Create data class to share import data" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create data class to share import data" />
+    <MESSAGE value="Remove out directory and ignore it" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove out directory and ignore it" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -411,6 +432,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/actionSystem/CommonDataKeys.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="26" column="49" selection-start-line="26" selection-start-column="41" selection-end-line="26" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="24" column="29" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportData.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/ide/util/PropertiesComponent.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -432,6 +474,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/Extensions.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="435">
@@ -439,31 +488,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/actionSystem/CommonDataKeys.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="26" column="49" selection-start-line="26" selection-start-column="41" selection-end-line="26" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportData.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="18" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="24" column="29" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-322">
-          <caret line="57" selection-start-line="57" selection-end-line="57" />
+        <state relative-caret-position="458">
+          <caret line="85" column="26" lean-forward="true" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
           <folding>
             <element signature="e#33#358#0" expanded="true" />
           </folding>
