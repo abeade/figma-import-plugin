@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1db85ebe-fe7c-4825-b09f-07cd4863be43" name="Default Changelist" comment="Change texts">
+    <list default="true" id="1db85ebe-fe7c-4825-b09f-07cd4863be43" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction$Companion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogWrapper$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogWrapper$Companion.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogWrapper$createCenterPanel$$inlined$panel$lambda$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogWrapper$createCenterPanel$$inlined$panel$lambda$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogWrapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/figma-import-plugin/com/abeade/plugin/figma/ImportDialogWrapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportData.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,20 +13,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="31" column="144" selection-start-line="31" selection-start-column="144" selection-end-line="31" selection-end-column="144" />
+            <state relative-caret-position="150">
+              <caret line="18" selection-start-line="18" selection-end-line="18" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-496">
-              <caret line="241" lean-forward="true" selection-start-line="241" selection-end-line="241" />
+            <state relative-caret-position="-181">
+              <caret line="241" selection-start-line="241" selection-end-line="241" />
             </state>
           </provider>
         </entry>
@@ -121,11 +113,6 @@
             <path>
               <item name="figma-import-plugin" type="b2602c69:ProjectViewProjectNode" />
               <item name="figma-import-plugin" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="figma-import-plugin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="figma-import-plugin" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -141,7 +128,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551310659444" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551310754753" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
@@ -221,12 +208,18 @@
       <option name="project" value="LOCAL" />
       <updated>1551297010276</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Find matches using given prefixes">
+      <created>1551310689046</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1551310689046</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26065302" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -237,14 +230,14 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32741398" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32741398" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39844617" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32741398" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="9" visible="true" weight="0.32741398" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.32963374" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -262,7 +255,8 @@
     <MESSAGE value="Create data class to share import data" />
     <MESSAGE value="Remove out directory and ignore it" />
     <MESSAGE value="Retrieve zip files contents and find resource name looking common prefix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Retrieve zip files contents and find resource name looking common prefix" />
+    <MESSAGE value="Find matches using given prefixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Find matches using given prefixes" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -468,17 +462,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt">
+    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="31" column="144" selection-start-line="31" selection-start-column="144" selection-end-line="31" selection-end-column="144" />
+        <state relative-caret-position="-181">
+          <caret line="241" selection-start-line="241" selection-end-line="241" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogWrapper.kt">
+    <entry file="file://$PROJECT_DIR$/src/com/abeade/plugin/figma/ImportDialogAction.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-496">
-          <caret line="241" lean-forward="true" selection-start-line="241" selection-end-line="241" />
+        <state relative-caret-position="150">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>

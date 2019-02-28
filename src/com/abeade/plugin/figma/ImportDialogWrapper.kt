@@ -71,8 +71,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
 
         rememberCheckBox = JCheckBox().apply { isSelected = saveDensities }
-        fileField = JTextField(String.empty).apply { isEditable = false }
-        resourceField = JTextField(String.empty)
+        fileField = JTextField(String.EMPTY).apply { isEditable = false }
+        resourceField = JTextField(String.EMPTY)
         ldpiField = JTextField(ldpi).apply { document.addDocumentListener(object : DocumentListener {
             override fun changedUpdate(p0: DocumentEvent?) {
                 updateLabels()
@@ -168,9 +168,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         return panel {
             noteRow("Select zip file with figma exported resources")
             row("File:") { fileField() }
-            row(String.empty) { button("Select file") { openFile(directory) } }
+            row(String.EMPTY) { button("Select file") { openFile(directory) } }
             row("Resource name:") { resourceField() }
-            noteRow("Select the suffixes used for each density (empty densities will be skipped)")
+            noteRow("Select the suffixes used for each density (EMPTY densities will be skipped)")
             row {
                 ldpiLabel()
                 ldpiField()
@@ -304,8 +304,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
                         it.subList(1, it.size).fold(it[0]) { prefix, item -> prefix.commonPrefixWith(item) }
                                 .plus(it[0].substring(it[0].lastIndexOf('.')))
                     it.size > 0 -> it[0]
-                    else -> String.empty
-                }.replace("[^A-Za-z0-9_\\.]".toRegex(), String.empty).toLowerCase()
+                    else -> String.EMPTY
+                }.replace("[^A-Za-z0-9_\\.]".toRegex(), String.EMPTY).toLowerCase()
                 resourceField.text = resource
             }
             updateLabels()
