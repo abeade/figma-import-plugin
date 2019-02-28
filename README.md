@@ -2,7 +2,7 @@
 Imports figma exported resources ZIP file containing PNG or JPG files by matching its suffixes with densities
 
 # Installation
-You can download the latest binary from [releases](https://github.com/hhariri/leanpub-plugin/releases) on this repo
+You can download the latest binary from [releases](https://github.com/abeade/figma-import-plugin/releases) on this repo
 
 # Usage
 The plugin installs one menu entry under the context menu when click over a `res` folder in a project:
