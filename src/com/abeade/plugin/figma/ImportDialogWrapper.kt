@@ -25,6 +25,15 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         private const val SAVE_KEY = "#com.abeade.plugin.figma.importDialog.savehdpi"
         private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
         private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
+        private const val FOLDER_LDPI = "drawable-ldpi"
+        private const val FOLDER_MDPI = "drawable-mdpi"
+        private const val FOLDER_HDPI = "drawable-hdpi"
+        private const val FOLDER_XHDPI = "drawable-xhdpi"
+        private const val FOLDER_XXHDPI = "drawable-xxhdpi"
+        private const val FOLDER_XXXHDPI = "drawable-xxhdpi"
+        private const val RESOURCE_PREFIX = "ic_"
+        private val COLOR_GREEN = Color(0, 204, 0)
+        private val COLOR_RED = Color(204, 0, 0)
     }
 
     init {
@@ -95,6 +104,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             row(String.EMPTY) { button("Select file") { openFile(directory) } }
             row("Resource name:") { resourceField() }
             noteRow("Select the suffixes used for each density (EMPTY densities will be skipped)")
+            noteRow("Existing resources will be overwritten")
             row {
                 ldpiLabel()
                 ldpiField()
@@ -121,7 +131,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             }
             row("Remember suffixes") { rememberCheckBox() }
             row { }
-            noteRow("""More info in <a href="https://github.com/abeade/figma-import-plugin">github repo</a>""")
+            noteRow("""<a href="https://github.com/abeade/figma-import-plugin">More info in github repo</a>""")
         }
     }
 
@@ -167,12 +177,12 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     private fun processResult() {
         result.clear()
         zipFilesList?.forEach {
-            addFieldToResult(it, ldpiField.text, "drawable-ldpi")
-            addFieldToResult(it, mdpiField.text, "drawable-mdpi")
-            addFieldToResult(it, hdpiField.text, "drawable-hdpi")
-            addFieldToResult(it, xhdpiField.text, "drawable-xhdpi")
-            addFieldToResult(it, xxhdpiField.text, "drawable-xxhdpi")
-            addFieldToResult(it, xxxhdpiField.text, "drawable-xxxhdpi")
+            addFieldToResult(it, ldpiField.text, FOLDER_LDPI)
+            addFieldToResult(it, mdpiField.text, FOLDER_MDPI)
+            addFieldToResult(it, hdpiField.text, FOLDER_HDPI)
+            addFieldToResult(it, xhdpiField.text, FOLDER_XHDPI)
+            addFieldToResult(it, xxhdpiField.text, FOLDER_XXHDPI)
+            addFieldToResult(it, xxxhdpiField.text, FOLDER_XXXHDPI)
         }
     }
 
@@ -203,18 +213,18 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val suffix = field.text
         if (!suffix.isBlank()) {
             if (filesList.any { it.substringBeforeLast('.').endsWith(suffix) }) {
-                label.foreground = Color.GREEN
+                label.foreground = COLOR_GREEN
             } else {
-                label.foreground = Color.RED
+                label.foreground = COLOR_RED
             }
         }
     }
 
     private fun updateLabelField(label: JLabel, field: JTextField) {
         if (field.text.isBlank()) {
-            label.foreground = Color.LIGHT_GRAY
+            label.foreground = Color.GRAY
         } else {
-            label.foreground = Color.BLACK
+            label.foreground = Color.WHITE
         }
     }
 
@@ -231,9 +241,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             file = fileDialog.selectedFile
             fileField.text = file.toString()
             val zipFile = ZipFile(file)
-            zipFilesList = zipFile.entries().asSequence().fold(mutableListOf()) { list, entry ->
-                list.apply { add(entry.name) }
-            }
+            zipFilesList = zipFile.entries().asSequence()
+                .filter { !it.isDirectory && (it.name.endsWith(".png", true) || it.name.endsWith(".jpg", true)) }
+                .fold(mutableListOf()) { list, entry -> list.apply { add(File(entry.name).name) } }
             zipFile.close()
             zipFilesList?.let {
                 resource = when {
@@ -243,6 +253,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
                     it.size > 0 -> it[0]
                     else -> String.EMPTY
                 }.replace("[^A-Za-z0-9_\\.]".toRegex(), String.EMPTY).toLowerCase()
+                if (resource?.startsWith(RESOURCE_PREFIX) == false) {
+                    resource = RESOURCE_PREFIX + resource
+                }
                 resourceField.text = resource
             }
             updateLabels()
