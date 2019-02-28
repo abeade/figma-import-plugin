@@ -153,6 +153,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         return when {
             fileField.text.isEmpty() -> ValidationInfo("Zip file required", fileField)
             resourceField.text.isBlank() -> ValidationInfo("Resource name required", resourceField)
+            resourceField.text.contains('.') -> ValidationInfo("Resource name should not contain extension", resourceField)
             ldpiField.text.isBlank() && mdpiField.text.isBlank() && hdpiField.text.isBlank()
                     && xhdpiField.text.isBlank() && xxhdpiField.text.isBlank() && xxxhdpiField.text.isBlank() ->
                 ValidationInfo("At least one density prefix should be defined")
@@ -246,12 +247,10 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             zipFile.close()
             zipFilesList?.let {
                 resource = when {
-                    it.size > 1 ->
-                        it.subList(1, it.size).fold(it[0]) { prefix, item -> prefix.commonPrefixWith(item) }
-                                .plus(it[0].substring(it[0].lastIndexOf('.')))
+                    it.size > 1 -> it.subList(1, it.size).fold(it[0]) { prefix, item -> prefix.commonPrefixWith(item) }
                     it.size > 0 -> it[0]
                     else -> String.EMPTY
-                }.replace("[^A-Za-z0-9_\\.]".toRegex(), String.EMPTY).toLowerCase()
+                }.replace("[^A-Za-z0-9_]".toRegex(), String.EMPTY).toLowerCase()
                 if (resource?.startsWith(RESOURCE_PREFIX) == false) {
                     resource = RESOURCE_PREFIX + resource
                 }

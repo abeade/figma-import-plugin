@@ -49,13 +49,14 @@ class ImportDialogAction : AnAction() {
                 .filter { !it.isDirectory }
                 .toList()
                 .map {
-                    val density = data.matches[File(it.name).name]
+                    val fileEntry = File(it.name)
+                    val density = data.matches[fileEntry.name]
                     if (density != null) {
                         val destination = File(resPath, density)
                         if (!destination.exists()) {
                             destination.mkdirs()
                         }
-                        val destinationFile = File(destination, data.resource)
+                        val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
                         if (destinationFile.exists()) {
                             updatedItems++
                         } else {
