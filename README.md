@@ -3,6 +3,7 @@ Imports figma exported resources ZIP file containing PNG or JPG files by matchin
 
 # Installation
 You can install the plugin from the [Plugin Repository](https://plugins.jetbrains.com/plugin/12031-import-figma-resources).
+
 Or you can download the latest binary from [releases](https://github.com/abeade/figma-import-plugin/releases) on this repo
 
 # Usage
