@@ -12,7 +12,7 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.filechooser.FileNameExtensionFilter
 
-class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) : DialogWrapper(true) {
+class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) : DialogWrapper(true), DocumentListener {
 
     private companion object {
 
@@ -73,90 +73,12 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         rememberCheckBox = JCheckBox().apply { isSelected = saveDensities }
         fileField = JTextField(String.EMPTY).apply { isEditable = false }
         resourceField = JTextField(String.EMPTY)
-        ldpiField = JTextField(ldpi).apply { document.addDocumentListener(object : DocumentListener {
-            override fun changedUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun insertUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun removeUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-        }) }
-        mdpiField = JTextField(mdpi).apply { document.addDocumentListener(object : DocumentListener {
-            override fun changedUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun insertUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun removeUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-        }) }
-        hdpiField = JTextField(hdpi).apply { document.addDocumentListener(object : DocumentListener {
-            override fun changedUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun insertUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun removeUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-        }) }
-        xhdpiField = JTextField(xhdpi).apply { document.addDocumentListener(object : DocumentListener {
-            override fun changedUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun insertUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun removeUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-        }) }
-        xxhdpiField = JTextField(xxhdpi).apply { document.addDocumentListener(object : DocumentListener {
-            override fun changedUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun insertUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun removeUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-        }) }
-        xxxhdpiField = JTextField(xxxhdpi).apply { document.addDocumentListener(object : DocumentListener {
-            override fun changedUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun insertUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-            override fun removeUpdate(p0: DocumentEvent?) {
-                updateLabels()
-            }
-
-        }) }
+        ldpiField = JTextField(ldpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
+        mdpiField = JTextField(mdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
+        hdpiField = JTextField(hdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
+        xhdpiField = JTextField(xhdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
+        xxhdpiField = JTextField(xxhdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
+        xxxhdpiField = JTextField(xxxhdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
 
         ldpiLabel = JLabel("ldpi suffix:")
         mdpiLabel = JLabel("mdpi suffix:")
@@ -164,6 +86,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         xhdpiLabel = JLabel("xhdpi suffix:")
         xxhdpiLabel = JLabel("xxhdpi suffix:")
         xxxhdpiLabel = JLabel("xxxhdpi suffix:")
+
+        updateLabels()
 
         return panel {
             noteRow("Select zip file with figma exported resources")
@@ -223,9 +147,21 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             ldpiField.text.isBlank() && mdpiField.text.isBlank() && hdpiField.text.isBlank()
                     && xhdpiField.text.isBlank() && xxhdpiField.text.isBlank() && xxxhdpiField.text.isBlank() ->
                 ValidationInfo("At least one density prefix should be defined")
-            result.isEmpty() -> ValidationInfo("No resource matches!! Review the prefixes")
+            result.isEmpty() -> ValidationInfo("No resource matches! Review the prefixes")
             else -> null
         }
+    }
+
+    override fun changedUpdate(p0: DocumentEvent?) {
+        updateLabels()
+    }
+
+    override fun insertUpdate(p0: DocumentEvent?) {
+        updateLabels()
+    }
+
+    override fun removeUpdate(p0: DocumentEvent?) {
+        updateLabels()
     }
 
     private fun processResult() {
@@ -295,7 +231,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             file = fileDialog.selectedFile
             fileField.text = file.toString()
             val zipFile = ZipFile(file)
-            zipFilesList = zipFile.entries().asIterator().asSequence().fold(mutableListOf()) { list, entry ->
+            zipFilesList = zipFile.entries().asSequence().fold(mutableListOf()) { list, entry ->
                 list.apply { add(entry.name) }
             }
             zipFile.close()
