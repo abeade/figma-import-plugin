@@ -202,7 +202,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     }
 
     override fun doOKAction() {
-        data = ImportData(file, result)
+        data = ImportData(file, resourceField.text, result)
         val remember = rememberCheckBox.isSelected
         propertiesComponent.setValue(LDPI_KEY, if (remember) ldpiField.text else null)
         propertiesComponent.setValue(MDPI_KEY, if (remember) mdpiField.text else null)
@@ -298,6 +298,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             zipFilesList = zipFile.entries().asIterator().asSequence().fold(mutableListOf()) { list, entry ->
                 list.apply { add(entry.name) }
             }
+            zipFile.close()
             zipFilesList?.let {
                 resource = when {
                     it.size > 1 ->
