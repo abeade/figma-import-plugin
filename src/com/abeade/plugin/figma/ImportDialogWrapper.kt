@@ -99,7 +99,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         updateLabels()
 
         return panel {
-            noteRow("Select zip file with figma exported resources")
+            noteRow("Select zip file with figma exported resources (JPG or PNG)")
             row("File:") { fileField() }
             row(String.EMPTY) { button("Select file") { openFile(directory) } }
             row("Resource name:") { resourceField() }
@@ -157,7 +157,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             ldpiField.text.isBlank() && mdpiField.text.isBlank() && hdpiField.text.isBlank()
                     && xhdpiField.text.isBlank() && xxhdpiField.text.isBlank() && xxxhdpiField.text.isBlank() ->
                 ValidationInfo("At least one density prefix should be defined")
-            result.isEmpty() -> ValidationInfo("No resource matches! Review the prefixes")
+            result.isEmpty() -> ValidationInfo("No resource matches found! Review the prefixes and ensure you're using PNG or JPG")
             else -> null
         }
     }
