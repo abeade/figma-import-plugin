@@ -2,7 +2,8 @@
 Imports figma exported resources ZIP file containing PNG or JPG files by matching its suffixes with densities
 
 # Installation
-You can download the latest binary from [releases](https://github.com/abeade/figma-import-plugin/releases) on this repo
+You can install the plugin from the [Plugin Repository](https://plugins.jetbrains.com/plugin/12031-import-figma-resources).
+Or you can download the latest binary from [releases](https://github.com/abeade/figma-import-plugin/releases) on this repo
 
 # Usage
 The plugin installs one menu entry under the context menu when click over a `res` folder in a project:
