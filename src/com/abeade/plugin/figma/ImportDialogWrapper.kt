@@ -32,7 +32,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         private const val FOLDER_XXHDPI = "drawable-xxhdpi"
         private const val FOLDER_XXXHDPI = "drawable-xxhdpi"
         private const val RESOURCE_PREFIX = "ic_"
-        private val COLOR_GREEN = Color(0, 204, 0)
+        private val COLOR_GREEN = Color(0, 154, 0)
         private val COLOR_RED = Color(204, 0, 0)
     }
 
@@ -103,7 +103,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             row("File:") { fileField() }
             row(String.EMPTY) { button("Select file") { openFile(directory) } }
             row("Resource name:") { resourceField() }
-            noteRow("Select the suffixes used for each density (EMPTY densities will be skipped)")
+            noteRow("Select the suffixes used for each density (empty densities will be skipped)")
             noteRow("Existing resources will be overwritten")
             row {
                 ldpiLabel()
@@ -131,7 +131,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             }
             row("Remember suffixes") { rememberCheckBox() }
             row { }
-            noteRow("""<a href="https://github.com/abeade/figma-import-plugin">More info in github repo</a>""")
+            noteRow("""More info in <a href="https://github.com/abeade/figma-import-plugin">GitHub repository</a>""")
         }
     }
 
