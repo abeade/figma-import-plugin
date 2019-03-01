@@ -7,10 +7,16 @@ import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.ui.popup.Balloon
+import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.WindowManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl
+import com.intellij.ui.awt.RelativePoint
 import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipFile
@@ -63,12 +69,7 @@ class ImportAction : AnAction() {
                 }
                 if (existingDensities.isNotEmpty() && !ImportConfirmationDialogWrapper(data.resource, existingDensities).showAndGet()) {
                     zipFile.close()
-                    Notifications.Bus.notify(Notification(
-                        "Figma import",
-                        "Figma import finished",
-                        "Import was cancelled by user. No resources has been created nor updated.",
-                        NotificationType.WARNING
-                    ))
+                    showMessage(anActionEvent.project!!, "Import was cancelled by user. No resources has been created nor updated.", true)
                     return
                 }
             }
@@ -94,37 +95,32 @@ class ImportAction : AnAction() {
                 }
             }
             zipFile.close()
-            val notification = if (updatedItems == 0 && createdItems == 0) {
-                Notification(
-                    "Figma import",
-                    "Figma import finished",
-                    "Figma import no resources has benn created or updated",
-                    NotificationType.ERROR
-                )
+            if (updatedItems == 0 && createdItems == 0) {
+                showMessage(anActionEvent.project!!, "Figma import no resources has benn created or updated", true)
             } else {
                 virtualFileRes.refresh(false, false)
                 when {
-                    updatedItems == 0 -> Notification(
-                        "Figma import",
-                        "Figma import finished",
-                        "$createdItems resources has been created",
-                        NotificationType.INFORMATION
-                    )
-                    createdItems == 0 -> Notification(
-                        "Figma import",
-                        "Figma import finished",
-                        "$updatedItems resources has been updated",
-                        NotificationType.INFORMATION
-                    )
-                    else -> Notification(
-                        "Figma import",
-                        "Figma import finished",
-                        "$createdItems resources has been created and $updatedItems resources has been updated",
-                        NotificationType.INFORMATION
-                    )
+                    updatedItems == 0 -> showMessage(anActionEvent.project!!, "$createdItems resources has been created", false)
+                    createdItems == 0 -> showMessage(anActionEvent.project!!, "$updatedItems resources has been updated", false)
+                    else -> showMessage(anActionEvent.project!!, "$createdItems resources has been created and $updatedItems resources has been updated", false)
                 }
             }
-            Notifications.Bus.notify(notification)
         }
+    }
+
+    private fun showMessage(project: Project, message: String, isError: Boolean) {
+        Notifications.Bus.notify(Notification(
+            "Figma import",
+            "Figma import finished",
+            message,
+            if (isError) NotificationType.ERROR else NotificationType.INFORMATION
+        ))
+        val statusBar = WindowManager.getInstance()
+            ?.getStatusBar(project)
+        JBPopupFactory.getInstance()
+            ?.createHtmlTextBalloonBuilder(message, if (isError) MessageType.ERROR else MessageType.INFO, null)
+            ?.setFadeoutTime(5000)
+            ?.createBalloon()
+            ?.show(RelativePoint.getCenterOf(statusBar?.component!!), Balloon.Position.above)
     }
 }
