@@ -23,6 +23,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         private const val XXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxhpdi"
         private const val XXXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxxhpdi"
         private const val SAVE_KEY = "#com.abeade.plugin.figma.importDialog.savehdpi"
+        private const val OVERRIDE_KEY = "#com.abeade.plugin.figma.importDialog.override"
         private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
         private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
         private const val FOLDER_LDPI = "drawable-ldpi"
@@ -59,6 +60,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     private lateinit var xxhdpiField: JTextField
     private lateinit var xxxhdpiField: JTextField
     private lateinit var rememberCheckBox: JCheckBox
+    private lateinit var overrideCheckBox: JCheckBox
 
     private lateinit var ldpiLabel: JLabel
     private lateinit var mdpiLabel: JLabel
@@ -77,9 +79,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val xxhdpi = propertiesComponent.getValue(XXHDPI_KEY).orEmpty()
         val xxxhdpi = propertiesComponent.getValue(XXXHDPI_KEY).orEmpty()
         val saveDensities = propertiesComponent.getBoolean(SAVE_KEY)
+        val override = propertiesComponent.getBoolean(OVERRIDE_KEY, true)
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
 
         rememberCheckBox = JCheckBox().apply { isSelected = saveDensities }
+        overrideCheckBox = JCheckBox("Show confirmation dialog if any resource already exists (otherwise resources will be overwritten)").apply { isSelected = override }
         fileField = JTextField(String.EMPTY).apply { isEditable = false }
         resourceField = JTextField(String.EMPTY)
         ldpiField = JTextField(ldpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
@@ -103,7 +107,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             row("File:") { fileField() }
             row(String.EMPTY) { button("Select file") { openFile(directory) } }
             row("Resource name:") { resourceField() }
-            noteRow("Select the suffixes used for each density (empty densities will be skipped)\nExisting resources will be overwritten")
+            row(String.EMPTY) { overrideCheckBox()}
+            row { }
+            noteRow("Select the suffixes used for each density (empty densities will be skipped)")
             row {
                 ldpiLabel()
                 ldpiField()
@@ -135,7 +141,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     }
 
     override fun doOKAction() {
-        data = ImportData(file, resourceField.text, result)
+        data = ImportData(file, resourceField.text, result, overrideCheckBox.isSelected)
         val remember = rememberCheckBox.isSelected
         propertiesComponent.setValue(LDPI_KEY, if (remember) ldpiField.text else null)
         propertiesComponent.setValue(MDPI_KEY, if (remember) mdpiField.text else null)
@@ -144,6 +150,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         propertiesComponent.setValue(XXHDPI_KEY, if (remember) xxhdpiField.text else null)
         propertiesComponent.setValue(XXXHDPI_KEY, if (remember) xxxhdpiField.text else null)
         propertiesComponent.setValue(SAVE_KEY, remember)
+        propertiesComponent.setValue(OVERRIDE_KEY, overrideCheckBox.isSelected)
         propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
         super.doOKAction()
     }

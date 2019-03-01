@@ -1,15 +1,15 @@
 <idea-plugin>
   <id>com.abeade.plugin.figma.import</id>
   <name>Import figma resources</name>
-  <version>1.0.2</version>
-  <vendor email="albert.beade@letgo.com" url="https://github.com/abeade/figma-import-plugin">Me</vendor>
+  <version>1.0.3</version>
+  <vendor email="albert.beade@letgo.com" url="https://github.com/abeade/figma-import-plugin">Repo on GitHub</vendor>
 
   <description><![CDATA[
       Import figma resources to dpi resource folders.<br>
     ]]></description>
 
   <change-notes><![CDATA[
-      Fixes issue importing xxxhdpi resources.<br>
+      Adds configurable override confirmation for existing resources.<br>
     ]]>
   </change-notes>
 
@@ -27,7 +27,7 @@
   </extensions>
 
   <actions>
-    <action id="abeade.figma.ImportDialog" class="com.abeade.plugin.figma.ImportDialogAction" text="Import figma resources"
+    <action id="abeade.figma.ImportDialog" class="com.abeade.plugin.figma.ImportAction" text="Import figma resources"
             description="Import figma resources from zip file to dpi folders">
       <add-to-group group-id="ProjectViewPopupMenu"  anchor="last"/>
     </action>
