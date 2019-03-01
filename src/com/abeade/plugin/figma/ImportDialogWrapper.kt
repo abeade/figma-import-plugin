@@ -14,8 +14,10 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) : DialogWrapper(true), DocumentListener {
 
-    private companion object {
+    companion object {
 
+        const val RESOURCE_PREFIX = "ic_"
+        const val PREFIX_KEY = "#com.abeade.plugin.figma.importDialog.prefix"
         private const val LDPI_KEY = "#com.abeade.plugin.figma.importDialog.lpdi"
         private const val MDPI_KEY = "#com.abeade.plugin.figma.importDialog.mpdi"
         private const val HDPI_KEY = "#com.abeade.plugin.figma.importDialog.hpdi"
@@ -32,7 +34,6 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         private const val FOLDER_XHDPI = "drawable-xhdpi"
         private const val FOLDER_XXHDPI = "drawable-xxhdpi"
         private const val FOLDER_XXXHDPI = "drawable-xxxhdpi"
-        private const val RESOURCE_PREFIX = "ic_"
         private val COLOR_GREEN = Color(0, 154, 0)
         private val COLOR_RED = Color(204, 0, 0)
     }
@@ -81,11 +82,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val saveDensities = propertiesComponent.getBoolean(SAVE_KEY)
         val override = propertiesComponent.getBoolean(OVERRIDE_KEY, true)
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
-
+        val prefix = propertiesComponent.getValue(ImportDialogWrapper.PREFIX_KEY) ?: RESOURCE_PREFIX
         rememberCheckBox = JCheckBox().apply { isSelected = saveDensities }
         overrideCheckBox = JCheckBox("Show confirmation dialog if any resource already exists (otherwise resources will be overwritten)").apply { isSelected = override }
         fileField = JTextField(String.EMPTY).apply { isEditable = false }
-        resourceField = JTextField(String.EMPTY)
+        resourceField = JTextField(prefix)
         ldpiField = JTextField(ldpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
         mdpiField = JTextField(mdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
         hdpiField = JTextField(hdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
@@ -258,8 +259,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
                     it.size > 0 -> it[0]
                     else -> String.EMPTY
                 }.replace("[^A-Za-z0-9_]".toRegex(), String.EMPTY).toLowerCase()
-                if (resource?.startsWith(RESOURCE_PREFIX) == false) {
-                    resource = RESOURCE_PREFIX + resource
+                val prefix = propertiesComponent.getValue(ImportDialogWrapper.PREFIX_KEY) ?: RESOURCE_PREFIX
+                if (resource?.startsWith(prefix) == false) {
+                    resource = prefix + resource
                 }
                 resourceField.text = resource
             }

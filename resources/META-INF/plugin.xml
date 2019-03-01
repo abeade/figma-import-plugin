@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.abeade.plugin.figma.import</id>
   <name>Import figma resources</name>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <vendor email="albert.beade@letgo.com" url="https://github.com/abeade/figma-import-plugin">Repo on GitHub</vendor>
 
   <description><![CDATA[
@@ -23,7 +23,8 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
+    <projectConfigurable instance="com.abeade.plugin.figma.ImportSettings" groupId="tools"
+                         groupWeight="130" displayName="Figma import"/>
   </extensions>
 
   <actions>
