@@ -13,8 +13,13 @@ The plugin installs one menu entry under the context menu when click over a `res
 
 When using this option a import dialog will be shown:
 
-![Dialgo](images/dialog.png)
+![Dialog](images/dialog.png)
 
 In it you need to select the ZIP file, once selected the purposed resource name will be filled (you can change it if you need it) and the matched suffixes will be marked in green and not matched suffixes in red.
 
 The "Remember suffixes" check allows to store the given suffixes for next plugin executions.
+
+# Setup
+You can change the proposed resource prefix in settings:
+
+![Settings](images/settings.png)
