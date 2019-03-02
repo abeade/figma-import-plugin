@@ -15,7 +15,7 @@ When using this option a import dialog will be shown:
 
 ![Dialog](images/dialog.png)
 
-In it you need to select the ZIP file, once selected the purposed resource name will be filled (you can change it if you need it) and the matched suffixes will be marked in green and not matched suffixes in red.
+In it you need to select the ZIP file, once selected the purpose resource name will be filled (you can change it if you need it) and matched and not matched suffixes will show an icon on right side.
 
 The "Remember suffixes" check allows to store the given suffixes for next plugin executions.
 
