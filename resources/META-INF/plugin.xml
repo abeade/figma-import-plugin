@@ -1,15 +1,15 @@
 <idea-plugin>
   <id>com.abeade.plugin.figma.import</id>
   <name>Import figma resources</name>
-  <version>1.0.4</version>
-  <vendor email="albert.beade@letgo.com" url="https://github.com/abeade/figma-import-plugin">Repo on GitHub</vendor>
+  <version>1.0.5</version>
+  <vendor email="albert.beade@letgo.com" url="https://github.com/abeade">Albert Beade</vendor>
 
   <description><![CDATA[
       Import figma resources to dpi resource folders.<br>
     ]]></description>
 
   <change-notes><![CDATA[
-      Adds configurable override confirmation for existing resources.<br>
+      Fix plugin settings.<br>
     ]]>
   </change-notes>
 
@@ -21,8 +21,8 @@
   <depends>com.intellij.modules.java</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <projectConfigurable instance="com.abeade.plugin.figma.ImportSettings" groupId="tools"
-                         groupWeight="130" displayName="Figma import"/>
+    <applicationConfigurable instance="com.abeade.plugin.figma.ImportSettings" groupId="tools"
+                             groupWeight="130" displayName="Figma import"/>
   </extensions>
 
   <actions>
