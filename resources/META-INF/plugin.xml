@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.abeade.plugin.figma.import</id>
   <name>Import figma resources</name>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <vendor email="albert.beade@letgo.com" url="https://github.com/abeade">Albert Beade</vendor>
 
   <description><![CDATA[
@@ -9,7 +9,35 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      Fix plugin settings.<br>
+      <b>1.0.6</b>
+      <ul>
+        <li>Fix issue when accessing plugin settings</li>
+      </ul>
+      <b>1.0.5</b>
+      <ul>
+        <li>Use global settings for the plugin</li>
+      </ul>
+      <b>1.0.4</b>
+      <ul>
+        <li>New settings option to configure the prefix used for purposed resource name</li>
+        <li>Show Icons at suffixes to show matched and not matched resources</li>
+      </ul>
+      <b>1.0.3</b>
+      <ul>
+        <li>Adds configurable override confirmation for existing resources</li>
+      </ul>
+      <b>1.0.2/b>
+      <ul>
+        <li>Allow mixed file types in same zip</li>
+      </ul>
+      <b>1.0.1</b>
+      <ul>
+        <li>Fixes issue with xxxhdpi resources</li>
+      </ul>
+      <b>1.0</b>
+      <ul>
+        <li>First version</li>
+      </ul>
     ]]>
   </change-notes>
 

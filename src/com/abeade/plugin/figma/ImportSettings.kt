@@ -6,7 +6,7 @@ import javax.swing.JComponent
 
 class ImportSettings : SearchableConfigurable {
 
-    private val panel = ImportSettingsPanel()
+    private val panel = ImportSettingsPanel(PropertiesComponent.getInstance())
 
     override fun getDisplayName(): String? = "Figma import"
 
@@ -14,9 +14,7 @@ class ImportSettings : SearchableConfigurable {
 
     override fun getId(): String = "Figma import"
 
-    override fun enableSearch(p0: String?): Runnable? = null
-
-    override fun createComponent(): JComponent? = panel.createPanel(PropertiesComponent.getInstance())
+    override fun createComponent(): JComponent? = panel
 
     override fun isModified(): Boolean = panel.isModified
 
@@ -26,9 +24,5 @@ class ImportSettings : SearchableConfigurable {
 
     override fun reset() {
         panel.reset()
-    }
-
-    override fun disposeUIResources() {
-        // Empty
     }
 }
