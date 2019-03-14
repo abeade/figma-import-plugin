@@ -1,3 +1,5 @@
+![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/v/12037-import-figma-resources.svg?color=green&style=plastic)
+
 # Figma Import Plugin
 Imports figma exported resources ZIP file containing PNG or JPG files by matching its suffixes with densities
 
