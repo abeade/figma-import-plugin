@@ -1,10 +1,11 @@
 package com.abeade.plugin.figma
 
+import com.abeade.plugin.figma.ui.ImportDialog
 import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
-import com.intellij.ui.layout.panel
+import com.intellij.ui.IdeBorderFactory
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.File
@@ -46,34 +47,13 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     val importData: ImportData?
         get() = data
 
+    private lateinit var dialog: ImportDialog
+
     private var data: ImportData? = null
     private var result = mutableMapOf<String, String>()
     private var file: File? = null
     private var zipFilesList: MutableList<String>? = null
     private var resource: String? = null
-
-    private lateinit var fileField: JTextField
-    private lateinit var resourceField: JTextField
-    private lateinit var ldpiField: JTextField
-    private lateinit var mdpiField: JTextField
-    private lateinit var hdpiField: JTextField
-    private lateinit var xhdpiField: JTextField
-    private lateinit var xxhdpiField: JTextField
-    private lateinit var xxxhdpiField: JTextField
-    private lateinit var rememberCheckBox: JCheckBox
-    private lateinit var overrideCheckBox: JCheckBox
-    private lateinit var ldpiLabel: JLabel
-    private lateinit var mdpiLabel: JLabel
-    private lateinit var hdpiLabel: JLabel
-    private lateinit var xhdpiLabel: JLabel
-    private lateinit var xxhdpiLabel: JLabel
-    private lateinit var xxxhdpiLabel: JLabel
-    private lateinit var ldpiIconLabel: JLabel
-    private lateinit var mdpiIconLabel: JLabel
-    private lateinit var hdpiIconLabel: JLabel
-    private lateinit var xhdpiIconLabel: JLabel
-    private lateinit var xxhdpiIconLabel: JLabel
-    private lateinit var xxxhdpiIconLabel: JLabel
 
     override fun getDimensionServiceKey(): String? = DIMENSION_SERVICE_KEY
 
@@ -88,96 +68,47 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val override = propertiesComponent.getBoolean(OVERRIDE_KEY, true)
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
         val prefix = propertiesComponent.getValue(ImportDialogWrapper.PREFIX_KEY) ?: RESOURCE_PREFIX
-        rememberCheckBox = JCheckBox().apply { isSelected = saveDensities }
-        overrideCheckBox = JCheckBox("Show confirmation dialog if any resource already exists (otherwise resources will be overwritten)").apply { isSelected = override }
-        fileField = JTextField(String.EMPTY).apply {
-            addMouseListener(object : MouseAdapter() {
+
+        dialog = ImportDialog().apply {
+            selectFileButton.addActionListener { openFile(directory) }
+            rememberCheckBox.isSelected = saveDensities
+            overrideCheckBox.isSelected = override
+            resourceField.text = prefix
+            fileField.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
                     openFile(directory)
                 }
             })
-            isEditable = false
-
+            ldpiField.text = ldpi
+            mdpiField.text = mdpi
+            hdpiField.text = hdpi
+            xhdpiField.text = xhdpi
+            xxhdpiField.text = xxhdpi
+            xxxhdpiField.text = xxxhdpi
+            ldpiField.document.addDocumentListener(this@ImportDialogWrapper)
+            mdpiField.document.addDocumentListener(this@ImportDialogWrapper)
+            hdpiField.document.addDocumentListener(this@ImportDialogWrapper)
+            xhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
+            xxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
+            xxxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
+            filePanel.border = IdeBorderFactory.createTitledBorder("Select zip file with figma exported resources (JPG or PNG)")
+            resourcesPanel.border = IdeBorderFactory.createTitledBorder("Select the suffixes used for each density (empty densities will be skipped)")
         }
-        resourceField = JTextField(prefix)
-        ldpiField = JTextField(ldpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
-        mdpiField = JTextField(mdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
-        hdpiField = JTextField(hdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
-        xhdpiField = JTextField(xhdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
-        xxhdpiField = JTextField(xxhdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
-        xxxhdpiField = JTextField(xxxhdpi).apply { document.addDocumentListener(this@ImportDialogWrapper) }
-        ldpiLabel = JLabel("ldpi suffix:")
-        mdpiLabel = JLabel("mdpi suffix:")
-        hdpiLabel = JLabel("hdpi suffix:")
-        xhdpiLabel = JLabel("xhdpi suffix:")
-        xxhdpiLabel = JLabel("xxhdpi suffix:")
-        xxxhdpiLabel = JLabel("xxxhdpi suffix:")
-        ldpiIconLabel = JLabel()
-        mdpiIconLabel = JLabel()
-        hdpiIconLabel = JLabel()
-        xhdpiIconLabel = JLabel()
-        xxhdpiIconLabel = JLabel()
-        xxxhdpiIconLabel = JLabel()
-
         updateLabels()
-
-        return panel {
-            noteRow("Select zip file with figma exported resources (JPG or PNG)")
-            row("File:") {
-                fileField(pushX)
-                button("Select file") { openFile(directory) }
-            }
-            row("Resource name:") { resourceField() }
-            row(String.EMPTY) { overrideCheckBox()}
-            row { }
-            noteRow("Select the suffixes used for each density (empty densities will be skipped)")
-            row {
-                ldpiLabel()
-                ldpiField(pushX, growX)
-                ldpiIconLabel()
-            }
-            row {
-                mdpiLabel()
-                mdpiField(pushX)
-                mdpiIconLabel()
-            }
-            row {
-                hdpiLabel()
-                hdpiField(pushX)
-                hdpiIconLabel()
-            }
-            row {
-                xhdpiLabel()
-                xhdpiField(pushX)
-                xhdpiIconLabel()
-            }
-            row {
-                xxhdpiLabel()
-                xxhdpiField(pushX)
-                xxhdpiIconLabel()
-            }
-            row {
-                xxxhdpiLabel()
-                xxxhdpiField(pushX)
-                xxxhdpiIconLabel()
-            }
-            row("Remember suffixes") { rememberCheckBox() }
-            row { }
-            noteRow("""More info in <a href="https://github.com/abeade/figma-import-plugin">GitHub repository</a>""")
-        }
+        return dialog.mainPanel
     }
 
     override fun doOKAction() {
-        data = ImportData(file, resourceField.text, result, overrideCheckBox.isSelected)
-        val remember = rememberCheckBox.isSelected
-        propertiesComponent.setValue(LDPI_KEY, if (remember) ldpiField.text else null)
-        propertiesComponent.setValue(MDPI_KEY, if (remember) mdpiField.text else null)
-        propertiesComponent.setValue(HDPI_KEY, if (remember) hdpiField.text else null)
-        propertiesComponent.setValue(XHDPI_KEY, if (remember) xhdpiField.text else null)
-        propertiesComponent.setValue(XXHDPI_KEY, if (remember) xxhdpiField.text else null)
-        propertiesComponent.setValue(XXXHDPI_KEY, if (remember) xxxhdpiField.text else null)
+        data = ImportData(file, dialog.resourceField.text, result, dialog.overrideCheckBox.isSelected)
+        val remember = dialog.rememberCheckBox.isSelected
+        propertiesComponent.setValue(LDPI_KEY, if (remember) dialog.ldpiField.text else null)
+        propertiesComponent.setValue(MDPI_KEY, if (remember) dialog.mdpiField.text else null)
+        propertiesComponent.setValue(HDPI_KEY, if (remember) dialog.hdpiField.text else null)
+        propertiesComponent.setValue(XHDPI_KEY, if (remember) dialog.xhdpiField.text else null)
+        propertiesComponent.setValue(XXHDPI_KEY, if (remember) dialog.xxhdpiField.text else null)
+        propertiesComponent.setValue(XXXHDPI_KEY, if (remember) dialog.xxxhdpiField.text else null)
         propertiesComponent.setValue(SAVE_KEY, remember)
-        propertiesComponent.setValue(OVERRIDE_KEY, overrideCheckBox.isSelected)
+        propertiesComponent.setValue(OVERRIDE_KEY, dialog.overrideCheckBox.isSelected)
         propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
         super.doOKAction()
     }
@@ -185,11 +116,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     override fun doValidate(): ValidationInfo? {
         processResult()
         return when {
-            fileField.text.isEmpty() -> ValidationInfo("Zip file required", fileField)
-            resourceField.text.isBlank() -> ValidationInfo("Resource name required", resourceField)
-            resourceField.text.contains('.') -> ValidationInfo("Resource name should not contain extension", resourceField)
-            ldpiField.text.isBlank() && mdpiField.text.isBlank() && hdpiField.text.isBlank()
-                    && xhdpiField.text.isBlank() && xxhdpiField.text.isBlank() && xxxhdpiField.text.isBlank() ->
+            dialog.fileField.text.isEmpty() -> ValidationInfo("Zip file required", dialog.fileField)
+            dialog.resourceField.text.isBlank() -> ValidationInfo("Resource name required", dialog.resourceField)
+            dialog.resourceField.text.contains('.') -> ValidationInfo("Resource name should not contain extension", dialog.resourceField)
+            dialog.ldpiField.text.isBlank() && dialog.mdpiField.text.isBlank() && dialog.hdpiField.text.isBlank()
+                    && dialog.xhdpiField.text.isBlank() && dialog.xxhdpiField.text.isBlank() && dialog.xxxhdpiField.text.isBlank() ->
                 ValidationInfo("At least one density prefix should be defined")
             result.isEmpty() -> ValidationInfo("No resource matches found! Review the prefixes and ensure you're using PNG or JPG")
             else -> null
@@ -211,12 +142,12 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     private fun processResult() {
         result.clear()
         zipFilesList?.forEach {
-            addFieldToResult(it, ldpiField.text, FOLDER_LDPI)
-            addFieldToResult(it, mdpiField.text, FOLDER_MDPI)
-            addFieldToResult(it, hdpiField.text, FOLDER_HDPI)
-            addFieldToResult(it, xhdpiField.text, FOLDER_XHDPI)
-            addFieldToResult(it, xxhdpiField.text, FOLDER_XXHDPI)
-            addFieldToResult(it, xxxhdpiField.text, FOLDER_XXXHDPI)
+            addFieldToResult(it, dialog.ldpiField.text, FOLDER_LDPI)
+            addFieldToResult(it, dialog.mdpiField.text, FOLDER_MDPI)
+            addFieldToResult(it, dialog.hdpiField.text, FOLDER_HDPI)
+            addFieldToResult(it, dialog.xhdpiField.text, FOLDER_XHDPI)
+            addFieldToResult(it, dialog.xxhdpiField.text, FOLDER_XXHDPI)
+            addFieldToResult(it, dialog.xxxhdpiField.text, FOLDER_XXXHDPI)
         }
     }
 
@@ -227,19 +158,19 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     }
 
     private fun updateLabels() {
-        updateLabelField(ldpiLabel, ldpiField)
-        updateLabelField(mdpiLabel, mdpiField)
-        updateLabelField(hdpiLabel, hdpiField)
-        updateLabelField(xhdpiLabel, xhdpiField)
-        updateLabelField(xxhdpiLabel, xxhdpiField)
-        updateLabelField(xxxhdpiLabel, xxxhdpiField)
+        updateLabelField(dialog.ldpiLabel, dialog.ldpiField)
+        updateLabelField(dialog.mdpiLabel, dialog.mdpiField)
+        updateLabelField(dialog.hdpiLabel, dialog.hdpiField)
+        updateLabelField(dialog.xhdpiLabel, dialog.xhdpiField)
+        updateLabelField(dialog.xxhdpiLabel, dialog.xxhdpiField)
+        updateLabelField(dialog.xxxhdpiLabel, dialog.xxxhdpiField)
         zipFilesList?.let {
-            updateIconField(ldpiIconLabel, ldpiField, it)
-            updateIconField(mdpiIconLabel, mdpiField, it)
-            updateIconField(hdpiIconLabel, hdpiField, it)
-            updateIconField(xhdpiIconLabel, xhdpiField, it)
-            updateIconField(xxhdpiIconLabel, xxhdpiField, it)
-            updateIconField(xxxhdpiIconLabel, xxxhdpiField, it)
+            updateIconField(dialog.ldpiIconLabel, dialog.ldpiField, it)
+            updateIconField(dialog.mdpiIconLabel, dialog.mdpiField, it)
+            updateIconField(dialog.hdpiIconLabel, dialog.hdpiField, it)
+            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiField, it)
+            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiField, it)
+            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiField, it)
         }
     }
 
@@ -274,7 +205,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         val result = fileDialog.showOpenDialog(contentPane)
         if (result == JFileChooser.APPROVE_OPTION) {
             file = fileDialog.selectedFile
-            fileField.text = file.toString()
+            dialog.fileField.text = file.toString()
             val zipFile = ZipFile(file)
             zipFilesList = zipFile.entries().asSequence()
                 .filter { !it.isDirectory && (it.name.endsWith(".png", true) || it.name.endsWith(".jpg", true)) }
@@ -290,7 +221,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
                 if (resource?.startsWith(prefix) == false) {
                     resource = prefix + resource
                 }
-                resourceField.text = resource
+                dialog.resourceField.text = resource
             }
             updateLabels()
         }
