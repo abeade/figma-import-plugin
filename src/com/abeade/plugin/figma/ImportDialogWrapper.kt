@@ -6,9 +6,11 @@ import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.IdeBorderFactory
+import java.awt.Desktop
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.File
+import java.net.URI
 import java.util.zip.ZipFile
 import javax.swing.*
 import javax.swing.event.DocumentEvent
@@ -93,6 +95,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
             xxxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
             filePanel.border = IdeBorderFactory.createTitledBorder("Select zip file with figma exported resources (JPG or PNG)")
             resourcesPanel.border = IdeBorderFactory.createTitledBorder("Select the suffixes used for each density (empty densities will be skipped)")
+            moreInfoLabel.addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent?) {
+                    Desktop.getDesktop().browse(URI("https://github.com/abeade/figma-import-plugin"))
+                }
+            })
         }
         updateLabels()
         return dialog.mainPanel

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.abeade.plugin.figma.ui.ImportConfirmationDialog">
+  <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="384" height="176"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="56eda" class="javax.swing.JLabel" binding="titleLabel">
+        <constraints border-constraint="North"/>
+        <properties>
+          <text value="Label"/>
+        </properties>
+      </component>
+      <component id="78238" class="javax.swing.JLabel" binding="questionLabel">
+        <constraints border-constraint="South"/>
+        <properties>
+          <text value="Label"/>
+        </properties>
+      </component>
+      <component id="3e03d" class="javax.swing.JLabel" binding="itemsLabel">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <horizontalTextPosition value="10"/>
+          <text value="Label"/>
+          <verticalAlignment value="1"/>
+          <verticalTextPosition value="1"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

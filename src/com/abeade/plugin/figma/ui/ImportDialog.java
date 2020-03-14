@@ -29,4 +29,5 @@ public class ImportDialog {
     public JLabel xhdpiLabel;
     public JLabel xxhdpiLabel;
     public JLabel xxxhdpiLabel;
+    public JLabel moreInfoLabel;
 }
