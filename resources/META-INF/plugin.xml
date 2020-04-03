@@ -9,6 +9,10 @@
     ]]></description>
 
   <change-notes><![CDATA[
+      <b>1.0.8</b>
+      <ul>
+        <li>Fix language level</li>
+      </ul>
       <b>1.0.7</b>
       <ul>
         <li>Fix runtime issues by avoid using UI DSL</li>
