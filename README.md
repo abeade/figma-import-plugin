@@ -3,6 +3,8 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/12037-import-figma.svg)](https://plugins.jetbrains.com/plugin/12037-import-figma)
 
 # Figma Import Plugin
+<img src="src/main/resources/META-INF/pluginIcon.svg" width="100" />
+
 <!-- Plugin description -->
 Imports figma exported resources ZIP file containing PNG or JPG files by matching its suffixes with density folders
 <!-- Plugin description end -->

@@ -44,14 +44,6 @@ changelog {
     groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed"))
 }
 
-// Configure Gradle Qodana Plugin - read more: https://github.com/JetBrains/gradle-qodana-plugin
-qodana {
-    cachePath.set(projectDir.resolve(".qodana").canonicalPath)
-    reportPath.set(projectDir.resolve("build/reports/inspections").canonicalPath)
-    saveReport.set(true)
-    showReport.set(System.getenv("QODANA_SHOW_REPORT")?.toBoolean() ?: false)
-}
-
 tasks {
     // Set the JVM compatibility versions
     properties("javaVersion").let {
