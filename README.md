@@ -1,7 +1,11 @@
+![Build](https://github.com/abeade/figma-import-plugin/workflows/Build/badge.svg)
 ![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/v/12037-import-figma-resources.svg?color=green&style=plastic)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/12037-import-figma.svg)](https://plugins.jetbrains.com/plugin/12037-import-figma)
 
 # Figma Import Plugin
-Imports figma exported resources ZIP file containing PNG or JPG files by matching its suffixes with densities
+<!-- Plugin description -->
+Imports figma exported resources ZIP file containing PNG or JPG files by matching its suffixes with density folders
+<!-- Plugin description end -->
 
 # Installation
 You can install the plugin from the [Plugin Repository](https://plugins.jetbrains.com/plugin/12037-import-figma-resources).
