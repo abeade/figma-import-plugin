@@ -15,10 +15,10 @@
 
 ## [1.0.9] - 2022-01-30
 ### Added
-- Allow creating missing resource folders
+- Allows skip resources when density folder don't exist
 
 ### Changed
-- Target latest JDK
+- Target latest Idea IC JDK
 - Move project to gradle
 
 ## [1.0.8] - 2020-04-03
