@@ -43,10 +43,10 @@ class ImportAction : AnAction() {
     }
 
     override fun actionPerformed(anActionEvent: AnActionEvent) {
-        val dialog = ImportDialogWrapper(PropertiesComponent.getInstance())
+        val resPath = File(virtualFileRes.path)
+        val dialog = ImportDialogWrapper(PropertiesComponent.getInstance(), resPath)
         val result = dialog.showAndGet()
         if (result) {
-            val resPath = File(virtualFileRes.path)
             var createdItems = 0
             var updatedItems = 0
             val data = dialog.importData!!

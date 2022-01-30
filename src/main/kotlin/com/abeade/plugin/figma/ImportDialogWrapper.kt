@@ -17,7 +17,10 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.filechooser.FileNameExtensionFilter
 
-class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) : DialogWrapper(true), DocumentListener {
+class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, private val resPath: File) :
+    DialogWrapper(true),
+    DocumentListener
+{
 
     companion object {
 
@@ -177,20 +180,30 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
         updateLabelField(dialog.xxhdpiLabel!!, dialog.xxhdpiField!!)
         updateLabelField(dialog.xxxhdpiLabel!!, dialog.xxxhdpiField!!)
         zipFilesList?.let {
-            updateIconField(dialog.ldpiIconLabel!!, dialog.ldpiField!!, it)
-            updateIconField(dialog.mdpiIconLabel!!, dialog.mdpiField!!, it)
-            updateIconField(dialog.hdpiIconLabel!!, dialog.hdpiField!!, it)
-            updateIconField(dialog.xhdpiIconLabel!!, dialog.xhdpiField!!, it)
-            updateIconField(dialog.xxhdpiIconLabel!!, dialog.xxhdpiField!!, it)
-            updateIconField(dialog.xxxhdpiIconLabel!!, dialog.xxxhdpiField!!, it)
+            val create = propertiesComponent.isTrueValue(CREATE_KEY)
+            updateIconField(dialog.ldpiIconLabel!!, dialog.ldpiField!!, it, create, File(resPath, FOLDER_LDPI).exists())
+            updateIconField(dialog.mdpiIconLabel!!, dialog.mdpiField!!, it, create, File(resPath, FOLDER_MDPI).exists())
+            updateIconField(dialog.hdpiIconLabel!!, dialog.hdpiField!!, it, create, File(resPath, FOLDER_HDPI).exists())
+            updateIconField(dialog.xhdpiIconLabel!!, dialog.xhdpiField!!, it, create, File(resPath, FOLDER_XHDPI).exists())
+            updateIconField(dialog.xxhdpiIconLabel!!, dialog.xxhdpiField!!, it, create, File(resPath, FOLDER_XXHDPI).exists())
+            updateIconField(dialog.xxxhdpiIconLabel!!, dialog.xxxhdpiField!!, it, create, File(resPath, FOLDER_XXXHDPI).exists())
         }
     }
 
-    private fun updateIconField(iconLabel: JLabel, field: JTextField, filesList: MutableList<String>) {
+    private fun updateIconField(
+        iconLabel: JLabel,
+        field: JTextField,
+        filesList: MutableList<String>,
+        createWhenNotExists: Boolean,
+        exists: Boolean
+    ) {
         val suffix = field.text
         if (suffix.isBlank()) {
             iconLabel.icon = AllIcons.General.Warning
             iconLabel.toolTipText = "Empty suffix. Density will be skipped"
+        } else if (!exists && !createWhenNotExists) {
+            iconLabel.icon = AllIcons.General.Warning
+            iconLabel.toolTipText = "Density folder not found, resource will be skipped<br/>You can change this in plugin settings"
         } else {
             if (filesList.any { it.substringBeforeLast('.').endsWith(suffix) }) {
                 iconLabel.icon = AllIcons.General.InspectionsOK

@@ -42,5 +42,5 @@ class ImportSettingsPanelWrapper(private val propertiesComponent: PropertiesComp
         propertiesComponent.getValue(ImportDialogWrapper.PREFIX_KEY) ?: ImportDialogWrapper.RESOURCE_PREFIX
 
     private fun getCurrentCreate(): Boolean =
-        propertiesComponent.getBoolean(ImportDialogWrapper.CREATE_KEY, true)
+        propertiesComponent.isTrueValue(ImportDialogWrapper.CREATE_KEY)
 }
