@@ -5,9 +5,9 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 
 class ImportSettingsPanel {
-    var mainPanel: JPanel? = null
-    var resourcePrefixTextField: JTextField? = null
-    var resourcePrefixHelpPanel: JPanel? = null
-    var resourceCreateCheckBoxField: JCheckBox? = null
-    var resourceCreateHelpPanel: JPanel? = null
+    lateinit var mainPanel: JPanel
+    lateinit var resourcePrefixTextField: JTextField
+    lateinit var resourcePrefixHelpPanel: JPanel
+    lateinit var resourceCreateCheckBoxField: JCheckBox
+    lateinit var resourceCreateHelpPanel: JPanel
 }

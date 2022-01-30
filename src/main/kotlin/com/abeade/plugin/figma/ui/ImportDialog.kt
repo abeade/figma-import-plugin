@@ -7,31 +7,31 @@ import javax.swing.JCheckBox
 import javax.swing.JLabel
 
 class ImportDialog {
-    var mainPanel: JPanel? = null
-    var filePanel: JPanel? = null
-    var resourcesPanel: JPanel? = null
-    var fileField: JTextField? = null
-    var selectFileButton: JButton? = null
-    var resourceField: JTextField? = null
-    var overrideCheckBox: JCheckBox? = null
-    var ldpiField: JTextField? = null
-    var rememberCheckBox: JCheckBox? = null
-    var mdpiField: JTextField? = null
-    var hdpiField: JTextField? = null
-    var xhdpiField: JTextField? = null
-    var xxhdpiField: JTextField? = null
-    var xxxhdpiField: JTextField? = null
-    var ldpiIconLabel: JLabel? = null
-    var mdpiIconLabel: JLabel? = null
-    var hdpiIconLabel: JLabel? = null
-    var xhdpiIconLabel: JLabel? = null
-    var xxhdpiIconLabel: JLabel? = null
-    var xxxhdpiIconLabel: JLabel? = null
-    var ldpiLabel: JLabel? = null
-    var mdpiLabel: JLabel? = null
-    var hdpiLabel: JLabel? = null
-    var xhdpiLabel: JLabel? = null
-    var xxhdpiLabel: JLabel? = null
-    var xxxhdpiLabel: JLabel? = null
-    var moreInfoLabel: JLabel? = null
+    lateinit var mainPanel: JPanel
+    lateinit var filePanel: JPanel
+    lateinit var resourcesPanel: JPanel
+    lateinit var fileField: JTextField
+    lateinit var selectFileButton: JButton
+    lateinit var resourceField: JTextField
+    lateinit var overrideCheckBox: JCheckBox
+    lateinit var ldpiField: JTextField
+    lateinit var rememberCheckBox: JCheckBox
+    lateinit var mdpiField: JTextField
+    lateinit var hdpiField: JTextField
+    lateinit var xhdpiField: JTextField
+    lateinit var xxhdpiField: JTextField
+    lateinit var xxxhdpiField: JTextField
+    lateinit var ldpiIconLabel: JLabel
+    lateinit var mdpiIconLabel: JLabel
+    lateinit var hdpiIconLabel: JLabel
+    lateinit var xhdpiIconLabel: JLabel
+    lateinit var xxhdpiIconLabel: JLabel
+    lateinit var xxxhdpiIconLabel: JLabel
+    lateinit var ldpiLabel: JLabel
+    lateinit var mdpiLabel: JLabel
+    lateinit var hdpiLabel: JLabel
+    lateinit var xhdpiLabel: JLabel
+    lateinit var xxhdpiLabel: JLabel
+    lateinit var xxxhdpiLabel: JLabel
+    lateinit var moreInfoLabel: JLabel
 }

@@ -4,8 +4,8 @@ import javax.swing.JPanel
 import javax.swing.JLabel
 
 class ImportConfirmationDialog {
-    var mainPanel: JPanel? = null
-    var titleLabel: JLabel? = null
-    var itemsLabel: JLabel? = null
-    var questionLabel: JLabel? = null
+    lateinit var mainPanel: JPanel
+    lateinit var titleLabel: JLabel
+    lateinit var itemsLabel: JLabel
+    lateinit var questionLabel: JLabel
 }

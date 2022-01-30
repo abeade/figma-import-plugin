@@ -9,19 +9,19 @@ class ImportConfirmationDialogWrapper(private val resource: String, private val 
 
     init {
         init()
-        title = "Import figma resources"
+        title = "Import Figma Resources"
     }
 
-    override fun createCenterPanel(): JComponent?  {
+    override fun createCenterPanel(): JComponent  {
         return ImportConfirmationDialog().apply {
             if (affectedDensities.size > 1) {
-                itemsLabel!!.text = affectedDensities.joinToString(prefix = "<html><br/>", separator = "<br/>", postfix = "<br/><br/></html>")
-                titleLabel!!.text = "Resource $resource already exists in the following densities:"
-                questionLabel!!.text = "Do you want to overwrite them?"
+                itemsLabel.text = affectedDensities.joinToString(prefix = "<html><br/>", separator = "<br/>", postfix = "<br/><br/></html>")
+                titleLabel.text = "Resource $resource already exists in the following densities:"
+                questionLabel.text = "Do you want to overwrite them?"
             } else {
-                titleLabel!!.text = "Resource $resource already exists in density ${affectedDensities[0]}"
-                itemsLabel!!.text = " "
-                questionLabel!!.text = "Do you want to overwrite it?"
+                titleLabel.text = "Resource $resource already exists in density ${affectedDensities[0]}"
+                itemsLabel.text = " "
+                questionLabel.text = "Do you want to overwrite it?"
             }
         }.mainPanel
     }
