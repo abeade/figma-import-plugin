@@ -6,5 +6,6 @@ data class ImportData(
     val file: File?,
     val resource: String,
     val matches: Map<String, String>,
-    val confirmOverride: Boolean
+    val confirmOverride: Boolean,
+    val createMissingResourceFolders: Boolean,
 )

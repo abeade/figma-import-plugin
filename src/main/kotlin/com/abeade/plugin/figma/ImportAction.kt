@@ -73,25 +73,27 @@ class ImportAction : AnAction() {
                     return
                 }
             }
-            zipEntries.map {
+            zipEntries.forEach {
                 val fileEntry = File(it.name)
                 val density = data.matches[fileEntry.name]
                 if (density != null) {
                     val destination = File(resPath, density)
-                    if (!destination.exists()) {
-                        destination.mkdirs()
+                    if (destination.exists() || data.createMissingResourceFolders) {
+                        if (!destination.exists()) {
+                            destination.mkdirs()
+                        }
+                        val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
+                        if (destinationFile.exists()) {
+                            updatedItems++
+                        } else {
+                            createdItems++
+                        }
+                        val inStream = zipFile.getInputStream(it)
+                        val outStream = FileOutputStream(destinationFile)
+                        FileUtil.copy(inStream, outStream)
+                        outStream.close()
+                        inStream.close()
                     }
-                    val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
-                    if (destinationFile.exists()) {
-                        updatedItems++
-                    } else {
-                        createdItems++
-                    }
-                    val inStream = zipFile.getInputStream(it)
-                    val outStream = FileOutputStream(destinationFile)
-                    FileUtil.copy(inStream, outStream)
-                    outStream.close()
-                    inStream.close()
                 }
             }
             zipFile.close()

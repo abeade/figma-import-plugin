@@ -4,19 +4,8 @@
 
 ## [Unreleased]
 ### Added
+- Allow creating missing resource folders
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-## [1.0.9] - 2022-01-29
-### Changed
-
-## [1.0.9]
 ### Changed
 - Target latest JDK
 - Move project to gradle

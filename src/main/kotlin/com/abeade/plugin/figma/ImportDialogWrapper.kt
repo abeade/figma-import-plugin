@@ -22,7 +22,10 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     companion object {
 
         const val RESOURCE_PREFIX = "ic_"
+
         const val PREFIX_KEY = "#com.abeade.plugin.figma.importDialog.prefix"
+        const val CREATE_KEY = "#com.abeade.plugin.figma.importDialog.create"
+
         private const val LDPI_KEY = "#com.abeade.plugin.figma.importDialog.lpdi"
         private const val MDPI_KEY = "#com.abeade.plugin.figma.importDialog.mpdi"
         private const val HDPI_KEY = "#com.abeade.plugin.figma.importDialog.hpdi"
@@ -43,7 +46,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
 
     init {
         init()
-        title = "Import figma resources"
+        title = "Import Figma Resources"
     }
 
     val importData: ImportData?
@@ -57,8 +60,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     private var zipFilesList: MutableList<String>? = null
     private var resource: String? = null
 
-    override fun getDimensionServiceKey(): String? = DIMENSION_SERVICE_KEY
+    override fun getDimensionServiceKey(): String = DIMENSION_SERVICE_KEY
 
+    @Suppress("DialogTitleCapitalization")
     override fun createCenterPanel(): JComponent {
         val ldpi = propertiesComponent.getValue(LDPI_KEY).orEmpty()
         val mdpi = propertiesComponent.getValue(MDPI_KEY).orEmpty()
@@ -106,7 +110,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     }
 
     override fun doOKAction() {
-        data = ImportData(file, dialog.resourceField!!.text, result, dialog.overrideCheckBox!!.isSelected)
+        val create =  propertiesComponent.getBoolean(CREATE_KEY, true)
+        data = ImportData(file, dialog.resourceField!!.text, result, dialog.overrideCheckBox!!.isSelected, create)
         val remember = dialog.rememberCheckBox!!.isSelected
         propertiesComponent.setValue(LDPI_KEY, if (remember) dialog.ldpiField!!.text else null)
         propertiesComponent.setValue(MDPI_KEY, if (remember) dialog.mdpiField!!.text else null)
@@ -198,7 +203,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent) 
     }
 
     private fun updateLabelField(label: JLabel, field: JTextField) {
-        label.isEnabled = !field.text.isBlank()
+        label.isEnabled = field.text.isNotBlank()
     }
 
     private fun openFile(directory: String?) {
