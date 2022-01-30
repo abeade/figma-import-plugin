@@ -19,14 +19,10 @@ import com.intellij.psi.impl.file.PsiDirectoryImpl
 import com.intellij.ui.awt.RelativePoint
 import java.io.File
 import java.io.FileOutputStream
+import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
 class ImportAction : AnAction() {
-
-    private companion object {
-
-        private const val RES_DIRECTORY = "res"
-    }
 
     private lateinit var virtualFileRes: VirtualFile
 
@@ -50,53 +46,43 @@ class ImportAction : AnAction() {
             var createdItems = 0
             var updatedItems = 0
             val data = dialog.importData!!
-            val zipFile = ZipFile(data.file)
-            val zipEntries = zipFile.entries().asSequence()
-                .filter { !it.isDirectory }
-                .toList()
-            if (data.confirmOverride) {
-                val existingDensities = zipEntries.fold(mutableListOf<String>()) { list, entry ->
-                    val fileEntry = File(entry.name)
+            ZipFile(data.file!!).use { zipFile ->
+                val zipEntries = zipFile.entries().asSequence()
+                    .filter { !it.isDirectory }
+                    .toList()
+                if (data.confirmOverride) {
+                    val existingDensities = getExistingDensities(zipEntries, data, resPath)
+                    if (existingDensities.isNotEmpty() &&
+                        !ImportConfirmationDialogWrapper(data.resource, existingDensities).showAndGet()
+                    ) {
+                        showMessage(anActionEvent.project!!, "Import was cancelled by user. No resources has been created nor updated.", true)
+                        return
+                    }
+                }
+                zipEntries.forEach {
+                    val fileEntry = File(it.name)
                     val density = data.matches[fileEntry.name]
                     if (density != null) {
                         val destination = File(resPath, density)
-                        val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
-                        if (destinationFile.exists()) {
-                            list.add(density)
+                        if (destination.exists() || !data.skipResourcesWithNoFolder) {
+                            if (!destination.exists()) {
+                                destination.mkdirs()
+                            }
+                            val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
+                            if (destinationFile.exists()) {
+                                updatedItems++
+                            } else {
+                                createdItems++
+                            }
+                            val inStream = zipFile.getInputStream(it)
+                            val outStream = FileOutputStream(destinationFile)
+                            FileUtil.copy(inStream, outStream)
+                            outStream.close()
+                            inStream.close()
                         }
-                    }
-                    list
-                }
-                if (existingDensities.isNotEmpty() && !ImportConfirmationDialogWrapper(data.resource, existingDensities).showAndGet()) {
-                    zipFile.close()
-                    showMessage(anActionEvent.project!!, "Import was cancelled by user. No resources has been created nor updated.", true)
-                    return
-                }
-            }
-            zipEntries.forEach {
-                val fileEntry = File(it.name)
-                val density = data.matches[fileEntry.name]
-                if (density != null) {
-                    val destination = File(resPath, density)
-                    if (destination.exists() || !data.skipResourcesWithNoFolder) {
-                        if (!destination.exists()) {
-                            destination.mkdirs()
-                        }
-                        val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
-                        if (destinationFile.exists()) {
-                            updatedItems++
-                        } else {
-                            createdItems++
-                        }
-                        val inStream = zipFile.getInputStream(it)
-                        val outStream = FileOutputStream(destinationFile)
-                        FileUtil.copy(inStream, outStream)
-                        outStream.close()
-                        inStream.close()
                     }
                 }
             }
-            zipFile.close()
             if (updatedItems == 0 && createdItems == 0) {
                 showMessage(anActionEvent.project!!, "Figma import no resources has benn created or updated", true)
             } else {
@@ -108,6 +94,23 @@ class ImportAction : AnAction() {
                 }
             }
         }
+    }
+
+    private fun getExistingDensities(
+        zipEntries: List<ZipEntry>,
+        data: ImportData,
+        resPath: File
+    ) = zipEntries.fold(mutableListOf<String>()) { list, entry ->
+        val fileEntry = File(entry.name)
+        val density = data.matches[fileEntry.name]
+        if (density != null) {
+            val destination = File(resPath, density)
+            val destinationFile = File(destination, "${data.resource}.${fileEntry.extension}")
+            if (destinationFile.exists()) {
+                list.add(density)
+            }
+        }
+        list
     }
 
     private fun showMessage(project: Project, message: String, isError: Boolean) {
@@ -124,5 +127,10 @@ class ImportAction : AnAction() {
             ?.setFadeoutTime(5000)
             ?.createBalloon()
             ?.show(RelativePoint.getCenterOf(statusBar?.component!!), Balloon.Position.above)
+    }
+
+    private companion object {
+
+        private const val RES_DIRECTORY = "res"
     }
 }

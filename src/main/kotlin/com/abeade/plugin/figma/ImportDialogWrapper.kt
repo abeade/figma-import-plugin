@@ -22,31 +22,6 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
     DocumentListener
 {
 
-    companion object {
-
-        const val RESOURCE_PREFIX = "ic_"
-
-        const val PREFIX_KEY = "#com.abeade.plugin.figma.importDialog.prefix"
-        const val SKIP_KEY = "#com.abeade.plugin.figma.importDialog.create"
-
-        private const val LDPI_KEY = "#com.abeade.plugin.figma.importDialog.lpdi"
-        private const val MDPI_KEY = "#com.abeade.plugin.figma.importDialog.mpdi"
-        private const val HDPI_KEY = "#com.abeade.plugin.figma.importDialog.hpdi"
-        private const val XHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xhpdi"
-        private const val XXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxhpdi"
-        private const val XXXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxxhpdi"
-        private const val SAVE_KEY = "#com.abeade.plugin.figma.importDialog.savehdpi"
-        private const val OVERRIDE_KEY = "#com.abeade.plugin.figma.importDialog.override"
-        private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
-        private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
-        private const val FOLDER_LDPI = "drawable-ldpi"
-        private const val FOLDER_MDPI = "drawable-mdpi"
-        private const val FOLDER_HDPI = "drawable-hdpi"
-        private const val FOLDER_XHDPI = "drawable-xhdpi"
-        private const val FOLDER_XXHDPI = "drawable-xxhdpi"
-        private const val FOLDER_XXXHDPI = "drawable-xxxhdpi"
-    }
-
     init {
         init()
         title = "Import Figma Resources"
@@ -116,12 +91,12 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         val skip =  propertiesComponent.isTrueValue(SKIP_KEY)
         data = ImportData(file, dialog.resourceField.text, result, dialog.overrideCheckBox.isSelected, skip)
         val remember = dialog.rememberCheckBox.isSelected
-        propertiesComponent.setValue(LDPI_KEY, if (remember) dialog.ldpiField.text else null)
-        propertiesComponent.setValue(MDPI_KEY, if (remember) dialog.mdpiField.text else null)
-        propertiesComponent.setValue(HDPI_KEY, if (remember) dialog.hdpiField.text else null)
-        propertiesComponent.setValue(XHDPI_KEY, if (remember) dialog.xhdpiField.text else null)
-        propertiesComponent.setValue(XXHDPI_KEY, if (remember) dialog.xxhdpiField.text else null)
-        propertiesComponent.setValue(XXXHDPI_KEY, if (remember) dialog.xxxhdpiField.text else null)
+        propertiesComponent.setValue(LDPI_KEY, dialog.ldpiField.text.takeIf { remember })
+        propertiesComponent.setValue(MDPI_KEY, dialog.mdpiField.text.takeIf { remember })
+        propertiesComponent.setValue(HDPI_KEY, dialog.hdpiField.text.takeIf { remember })
+        propertiesComponent.setValue(XHDPI_KEY, dialog.xhdpiField.text.takeIf { remember })
+        propertiesComponent.setValue(XXHDPI_KEY, dialog.xxhdpiField.text.takeIf { remember })
+        propertiesComponent.setValue(XXXHDPI_KEY, dialog.xxxhdpiField.text.takeIf { remember })
         propertiesComponent.setValue(SAVE_KEY, remember)
         propertiesComponent.setValue(OVERRIDE_KEY, dialog.overrideCheckBox.isSelected)
         propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
@@ -181,12 +156,12 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         updateLabelField(dialog.xxxhdpiLabel, dialog.xxxhdpiField)
         zipFilesList?.let {
             val skip = propertiesComponent.isTrueValue(SKIP_KEY)
-            updateIconField(dialog.ldpiIconLabel, dialog.ldpiField, it, skip, File(resPath, FOLDER_LDPI).exists())
-            updateIconField(dialog.mdpiIconLabel, dialog.mdpiField, it, skip, File(resPath, FOLDER_MDPI).exists())
-            updateIconField(dialog.hdpiIconLabel, dialog.hdpiField, it, skip, File(resPath, FOLDER_HDPI).exists())
-            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiField, it, skip, File(resPath, FOLDER_XHDPI).exists())
-            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiField, it, skip, File(resPath, FOLDER_XXHDPI).exists())
-            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiField, it, skip, File(resPath, FOLDER_XXXHDPI).exists())
+            updateIconField(dialog.ldpiIconLabel, dialog.ldpiField, it, skip, FOLDER_LDPI)
+            updateIconField(dialog.mdpiIconLabel, dialog.mdpiField, it, skip, FOLDER_MDPI)
+            updateIconField(dialog.hdpiIconLabel, dialog.hdpiField, it, skip, FOLDER_HDPI)
+            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiField, it, skip, FOLDER_XHDPI)
+            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiField, it, skip, FOLDER_XXHDPI)
+            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiField, it, skip, FOLDER_XXXHDPI)
         }
     }
 
@@ -195,13 +170,14 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         field: JTextField,
         filesList: MutableList<String>,
         skipWhenNotExists: Boolean,
-        exists: Boolean
+        densityFolder: String
     ) {
+        val destinationExists = File(resPath, densityFolder).exists()
         val suffix = field.text
         if (suffix.isBlank()) {
             iconLabel.icon = AllIcons.General.Warning
             iconLabel.toolTipText = "Empty suffix. Density will be skipped"
-        } else if (!exists && skipWhenNotExists) {
+        } else if (!destinationExists && skipWhenNotExists) {
             iconLabel.icon = AllIcons.General.Warning
             iconLabel.toolTipText = "Density folder not found, resource will be skipped<br/>You can change this in plugin settings"
         } else {
@@ -230,10 +206,13 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         val result = fileDialog.showOpenDialog(contentPane)
         if (result == JFileChooser.APPROVE_OPTION) {
             file = fileDialog.selectedFile
-            dialog.fileField.text = file.toString()
-            ZipFile(file).use { zipFile ->
+            dialog.fileField.text = fileDialog.selectedFile.toString()
+            ZipFile(fileDialog.selectedFile).use { zipFile ->
                 zipFilesList = zipFile.entries().asSequence()
-                    .filter { !it.isDirectory && (it.name.endsWith(".png", true) || it.name.endsWith(".jpg", true)) }
+                    .filter {
+                        !it.isDirectory && (it.name.endsWith(".png", true) ||
+                                it.name.endsWith(".jpg", true))
+                    }
                     .fold(mutableListOf()) { list, entry -> list.apply { add(File(entry.name).name) } }
             }
             zipFilesList?.let {
@@ -250,5 +229,30 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
             }
             updateLabels()
         }
+    }
+
+    companion object {
+
+        const val RESOURCE_PREFIX = "ic_"
+
+        const val PREFIX_KEY = "#com.abeade.plugin.figma.importDialog.prefix"
+        const val SKIP_KEY = "#com.abeade.plugin.figma.importDialog.create"
+
+        private const val LDPI_KEY = "#com.abeade.plugin.figma.importDialog.lpdi"
+        private const val MDPI_KEY = "#com.abeade.plugin.figma.importDialog.mpdi"
+        private const val HDPI_KEY = "#com.abeade.plugin.figma.importDialog.hpdi"
+        private const val XHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xhpdi"
+        private const val XXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxhpdi"
+        private const val XXXHDPI_KEY = "#com.abeade.plugin.figma.importDialog.xxxhpdi"
+        private const val SAVE_KEY = "#com.abeade.plugin.figma.importDialog.savehdpi"
+        private const val OVERRIDE_KEY = "#com.abeade.plugin.figma.importDialog.override"
+        private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
+        private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
+        private const val FOLDER_LDPI = "drawable-ldpi"
+        private const val FOLDER_MDPI = "drawable-mdpi"
+        private const val FOLDER_HDPI = "drawable-hdpi"
+        private const val FOLDER_XHDPI = "drawable-xhdpi"
+        private const val FOLDER_XXHDPI = "drawable-xxhdpi"
+        private const val FOLDER_XXXHDPI = "drawable-xxxhdpi"
     }
 }
