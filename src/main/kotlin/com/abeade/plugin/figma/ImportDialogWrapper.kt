@@ -113,7 +113,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
     }
 
     override fun doOKAction() {
-        val skip =  propertiesComponent.getBoolean(SKIP_KEY, true)
+        val skip =  propertiesComponent.isTrueValue(SKIP_KEY)
         data = ImportData(file, dialog.resourceField.text, result, dialog.overrideCheckBox.isSelected, skip)
         val remember = dialog.rememberCheckBox.isSelected
         propertiesComponent.setValue(LDPI_KEY, if (remember) dialog.ldpiField.text else null)
