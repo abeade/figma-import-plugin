@@ -18,7 +18,7 @@ class ImportSettingsPanelWrapper(private val propertiesComponent: PropertiesComp
         )
         settingsPanel.resourceCreateHelpPanel!!.layout = BorderLayout()
         settingsPanel.resourceCreateHelpPanel!!.add(
-            ComponentPanelBuilder.createCommentComponent("When selected, non existent resource density folders will be crated when needed.<br/>When not selected, resources will be skipped when no resource folder exists for that density..", false)
+            ComponentPanelBuilder.createCommentComponent("Avoids to auto create missing density folders.<br/>When a resource has no destination density folder it will be skipped.", false)
         )
     }
 
@@ -28,7 +28,7 @@ class ImportSettingsPanelWrapper(private val propertiesComponent: PropertiesComp
 
     fun apply() {
         propertiesComponent.setValue(ImportDialogWrapper.PREFIX_KEY, settingsPanel.resourcePrefixTextField!!.text)
-        propertiesComponent.setValue(ImportDialogWrapper.CREATE_KEY, settingsPanel.resourceCreateCheckBoxField!!.isSelected)
+        propertiesComponent.setValue(ImportDialogWrapper.SKIP_KEY, settingsPanel.resourceCreateCheckBoxField!!.isSelected)
     }
 
     fun reset() {
@@ -42,5 +42,5 @@ class ImportSettingsPanelWrapper(private val propertiesComponent: PropertiesComp
         propertiesComponent.getValue(ImportDialogWrapper.PREFIX_KEY) ?: ImportDialogWrapper.RESOURCE_PREFIX
 
     private fun getCurrentCreate(): Boolean =
-        propertiesComponent.isTrueValue(ImportDialogWrapper.CREATE_KEY)
+        propertiesComponent.isTrueValue(ImportDialogWrapper.SKIP_KEY)
 }

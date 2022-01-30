@@ -27,7 +27,7 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         const val RESOURCE_PREFIX = "ic_"
 
         const val PREFIX_KEY = "#com.abeade.plugin.figma.importDialog.prefix"
-        const val CREATE_KEY = "#com.abeade.plugin.figma.importDialog.create"
+        const val SKIP_KEY = "#com.abeade.plugin.figma.importDialog.create"
 
         private const val LDPI_KEY = "#com.abeade.plugin.figma.importDialog.lpdi"
         private const val MDPI_KEY = "#com.abeade.plugin.figma.importDialog.mpdi"
@@ -113,8 +113,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
     }
 
     override fun doOKAction() {
-        val create =  propertiesComponent.getBoolean(CREATE_KEY, true)
-        data = ImportData(file, dialog.resourceField!!.text, result, dialog.overrideCheckBox!!.isSelected, create)
+        val skip =  propertiesComponent.getBoolean(SKIP_KEY, true)
+        data = ImportData(file, dialog.resourceField!!.text, result, dialog.overrideCheckBox!!.isSelected, skip)
         val remember = dialog.rememberCheckBox!!.isSelected
         propertiesComponent.setValue(LDPI_KEY, if (remember) dialog.ldpiField!!.text else null)
         propertiesComponent.setValue(MDPI_KEY, if (remember) dialog.mdpiField!!.text else null)
@@ -180,13 +180,13 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         updateLabelField(dialog.xxhdpiLabel!!, dialog.xxhdpiField!!)
         updateLabelField(dialog.xxxhdpiLabel!!, dialog.xxxhdpiField!!)
         zipFilesList?.let {
-            val create = propertiesComponent.isTrueValue(CREATE_KEY)
-            updateIconField(dialog.ldpiIconLabel!!, dialog.ldpiField!!, it, create, File(resPath, FOLDER_LDPI).exists())
-            updateIconField(dialog.mdpiIconLabel!!, dialog.mdpiField!!, it, create, File(resPath, FOLDER_MDPI).exists())
-            updateIconField(dialog.hdpiIconLabel!!, dialog.hdpiField!!, it, create, File(resPath, FOLDER_HDPI).exists())
-            updateIconField(dialog.xhdpiIconLabel!!, dialog.xhdpiField!!, it, create, File(resPath, FOLDER_XHDPI).exists())
-            updateIconField(dialog.xxhdpiIconLabel!!, dialog.xxhdpiField!!, it, create, File(resPath, FOLDER_XXHDPI).exists())
-            updateIconField(dialog.xxxhdpiIconLabel!!, dialog.xxxhdpiField!!, it, create, File(resPath, FOLDER_XXXHDPI).exists())
+            val skip = propertiesComponent.isTrueValue(SKIP_KEY)
+            updateIconField(dialog.ldpiIconLabel!!, dialog.ldpiField!!, it, skip, File(resPath, FOLDER_LDPI).exists())
+            updateIconField(dialog.mdpiIconLabel!!, dialog.mdpiField!!, it, skip, File(resPath, FOLDER_MDPI).exists())
+            updateIconField(dialog.hdpiIconLabel!!, dialog.hdpiField!!, it, skip, File(resPath, FOLDER_HDPI).exists())
+            updateIconField(dialog.xhdpiIconLabel!!, dialog.xhdpiField!!, it, skip, File(resPath, FOLDER_XHDPI).exists())
+            updateIconField(dialog.xxhdpiIconLabel!!, dialog.xxhdpiField!!, it, skip, File(resPath, FOLDER_XXHDPI).exists())
+            updateIconField(dialog.xxxhdpiIconLabel!!, dialog.xxxhdpiField!!, it, skip, File(resPath, FOLDER_XXXHDPI).exists())
         }
     }
 
@@ -194,14 +194,14 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         iconLabel: JLabel,
         field: JTextField,
         filesList: MutableList<String>,
-        createWhenNotExists: Boolean,
+        skipWhenNotExists: Boolean,
         exists: Boolean
     ) {
         val suffix = field.text
         if (suffix.isBlank()) {
             iconLabel.icon = AllIcons.General.Warning
             iconLabel.toolTipText = "Empty suffix. Density will be skipped"
-        } else if (!exists && !createWhenNotExists) {
+        } else if (!exists && skipWhenNotExists) {
             iconLabel.icon = AllIcons.General.Warning
             iconLabel.toolTipText = "Density folder not found, resource will be skipped<br/>You can change this in plugin settings"
         } else {

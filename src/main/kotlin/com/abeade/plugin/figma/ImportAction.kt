@@ -78,7 +78,7 @@ class ImportAction : AnAction() {
                 val density = data.matches[fileEntry.name]
                 if (density != null) {
                     val destination = File(resPath, density)
-                    if (destination.exists() || data.createMissingResourceFolders) {
+                    if (destination.exists() || !data.skipResourcesWithNoFolder) {
                         if (!destination.exists()) {
                             destination.mkdirs()
                         }
