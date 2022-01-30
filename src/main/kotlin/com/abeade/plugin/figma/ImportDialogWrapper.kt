@@ -231,11 +231,11 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         if (result == JFileChooser.APPROVE_OPTION) {
             file = fileDialog.selectedFile
             dialog.fileField.text = file.toString()
-            val zipFile = ZipFile(file)
-            zipFilesList = zipFile.entries().asSequence()
-                .filter { !it.isDirectory && (it.name.endsWith(".png", true) || it.name.endsWith(".jpg", true)) }
-                .fold(mutableListOf()) { list, entry -> list.apply { add(File(entry.name).name) } }
-            zipFile.close()
+            ZipFile(file).use { zipFile ->
+                zipFilesList = zipFile.entries().asSequence()
+                    .filter { !it.isDirectory && (it.name.endsWith(".png", true) || it.name.endsWith(".jpg", true)) }
+                    .fold(mutableListOf()) { list, entry -> list.apply { add(File(entry.name).name) } }
+            }
             zipFilesList?.let {
                 resource = when {
                     it.size > 1 -> it.subList(1, it.size).fold(it[0]) { prefix, item -> prefix.commonPrefixWith(item) }
