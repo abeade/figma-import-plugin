@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+## [1.0.9] - 2022-01-30
+### Added
 - Allow creating missing resource folders
 
 ### Changed
