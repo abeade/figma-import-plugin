@@ -57,6 +57,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
             selectFileButton.addActionListener { openFile(directory) }
             rememberCheckBox.isSelected = saveDensities
             overrideCheckBox.isSelected = override
+            comboBoxField.addActionListener {
+                updateLabels()
+            }
             resourceField.text = prefix
             fileField.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
@@ -132,18 +135,18 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
     private fun processResult() {
         result.clear()
         zipFilesList?.forEach {
-            addFieldToResult(it, dialog.ldpiField.text, FOLDER_LDPI)
-            addFieldToResult(it, dialog.mdpiField.text, FOLDER_MDPI)
-            addFieldToResult(it, dialog.hdpiField.text, FOLDER_HDPI)
-            addFieldToResult(it, dialog.xhdpiField.text, FOLDER_XHDPI)
-            addFieldToResult(it, dialog.xxhdpiField.text, FOLDER_XXHDPI)
-            addFieldToResult(it, dialog.xxxhdpiField.text, FOLDER_XXXHDPI)
+            addFieldToResult(it, dialog.ldpiField.text, Density.LDPI)
+            addFieldToResult(it, dialog.mdpiField.text, Density.MDPI)
+            addFieldToResult(it, dialog.hdpiField.text, Density.HDPI)
+            addFieldToResult(it, dialog.xhdpiField.text, Density.XHDPI)
+            addFieldToResult(it, dialog.xxhdpiField.text, Density.XXHDPI)
+            addFieldToResult(it, dialog.xxxhdpiField.text, Density.XXXHDPI)
         }
     }
 
-    private fun addFieldToResult(fileName: String, suffix: String, folder: String) {
+    private fun addFieldToResult(fileName: String, suffix: String, density: Density) {
         if (suffix.isNotBlank() && fileName.substringBeforeLast('.').endsWith(suffix)) {
-            result[fileName] = folder
+            result[fileName] = density.getFolder()
         }
     }
 
@@ -156,12 +159,12 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         updateLabelField(dialog.xxxhdpiLabel, dialog.xxxhdpiField)
         zipFilesList?.let {
             val skip = propertiesComponent.isTrueValue(SKIP_KEY)
-            updateIconField(dialog.ldpiIconLabel, dialog.ldpiField, it, skip, FOLDER_LDPI)
-            updateIconField(dialog.mdpiIconLabel, dialog.mdpiField, it, skip, FOLDER_MDPI)
-            updateIconField(dialog.hdpiIconLabel, dialog.hdpiField, it, skip, FOLDER_HDPI)
-            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiField, it, skip, FOLDER_XHDPI)
-            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiField, it, skip, FOLDER_XXHDPI)
-            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiField, it, skip, FOLDER_XXXHDPI)
+            updateIconField(dialog.ldpiIconLabel, dialog.ldpiField, it, skip, Density.LDPI)
+            updateIconField(dialog.mdpiIconLabel, dialog.mdpiField, it, skip, Density.MDPI)
+            updateIconField(dialog.hdpiIconLabel, dialog.hdpiField, it, skip, Density.HDPI)
+            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiField, it, skip, Density.XHDPI)
+            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiField, it, skip, Density.XXHDPI)
+            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiField, it, skip, Density.XXXHDPI)
         }
     }
 
@@ -170,9 +173,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         field: JTextField,
         filesList: MutableList<String>,
         skipWhenNotExists: Boolean,
-        densityFolder: String
+        density: Density
     ) {
-        val destinationExists = File(resPath, densityFolder).exists()
+        val destinationExists = File(resPath, density.getFolder()).exists()
         val suffix = field.text
         if (suffix.isBlank()) {
             iconLabel.icon = AllIcons.General.Warning
@@ -190,6 +193,9 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
             }
         }
     }
+
+    private fun Density.getFolder(): String =
+        FOLDER_DRAWABLE + (if (dialog.comboBoxField.selectedIndex == 1) DARK_MODIFIER else "") + value
 
     private fun updateLabelField(label: JLabel, field: JTextField) {
         label.isEnabled = field.text.isNotBlank()
@@ -231,6 +237,15 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         }
     }
 
+    private enum class Density(val value: String) {
+        LDPI("ldpi"),
+        MDPI("mdpi"),
+        HDPI("hdpi"),
+        XHDPI("xhdpi"),
+        XXHDPI("xxhdpi"),
+        XXXHDPI("xxxhdpi")
+    }
+
     companion object {
 
         const val RESOURCE_PREFIX = "ic_"
@@ -248,11 +263,8 @@ class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, 
         private const val OVERRIDE_KEY = "#com.abeade.plugin.figma.importDialog.override"
         private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
         private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
-        private const val FOLDER_LDPI = "drawable-ldpi"
-        private const val FOLDER_MDPI = "drawable-mdpi"
-        private const val FOLDER_HDPI = "drawable-hdpi"
-        private const val FOLDER_XHDPI = "drawable-xhdpi"
-        private const val FOLDER_XXHDPI = "drawable-xxhdpi"
-        private const val FOLDER_XXXHDPI = "drawable-xxxhdpi"
+
+        private const val FOLDER_DRAWABLE = "drawable-"
+        private const val DARK_MODIFIER = "night-"
     }
 }

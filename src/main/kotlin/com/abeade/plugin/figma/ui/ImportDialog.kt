@@ -1,10 +1,6 @@
 package com.abeade.plugin.figma.ui
 
-import javax.swing.JPanel
-import javax.swing.JTextField
-import javax.swing.JButton
-import javax.swing.JCheckBox
-import javax.swing.JLabel
+import javax.swing.*
 
 class ImportDialog {
     lateinit var mainPanel: JPanel
@@ -14,6 +10,7 @@ class ImportDialog {
     lateinit var selectFileButton: JButton
     lateinit var resourceField: JTextField
     lateinit var overrideCheckBox: JCheckBox
+    lateinit var comboBoxField: JComboBox<String>
     lateinit var ldpiField: JTextField
     lateinit var rememberCheckBox: JCheckBox
     lateinit var mdpiField: JTextField
