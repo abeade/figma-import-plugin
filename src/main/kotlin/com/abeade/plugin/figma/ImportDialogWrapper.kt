@@ -17,8 +17,10 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.filechooser.FileNameExtensionFilter
 
-class ImportDialogWrapper(private val propertiesComponent: PropertiesComponent, private val resPath: File) :
-    DialogWrapper(true),
+class ImportDialogWrapper(
+    private val propertiesComponent: PropertiesComponent,
+    private val resPath: File
+) : DialogWrapper(true),
     DocumentListener
 {
 
