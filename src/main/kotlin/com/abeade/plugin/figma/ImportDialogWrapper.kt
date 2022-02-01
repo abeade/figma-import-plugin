@@ -1,12 +1,17 @@
 package com.abeade.plugin.figma
 
 import com.abeade.plugin.figma.ui.ImportDialog
+import com.abeade.plugin.figma.ui.autocomplete.Autocomplete
+import com.abeade.plugin.figma.utils.EMPTY
+import com.abeade.plugin.figma.utils.containsAny
+import com.abeade.plugin.figma.utils.findFirstOf
 import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.IdeBorderFactory
 import java.awt.Desktop
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.File
@@ -59,9 +64,17 @@ class ImportDialogWrapper(
             selectFileButton.addActionListener { openFile(directory) }
             rememberCheckBox.isSelected = saveDensities
             overrideCheckBox.isSelected = override
-            comboBoxField.addActionListener {
-                updateLabels()
-            }
+
+            val autoCompleteBefore = Autocomplete(qualifierBeforeField, findPreQualifiers().toList(), ::onChanged)
+            qualifierBeforeField.document.addDocumentListener(autoCompleteBefore)
+            qualifierBeforeField.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "commit")
+            qualifierBeforeField.actionMap.put("commit", autoCompleteBefore.CommitAction())
+
+            val autoCompleteAfter = Autocomplete(qualifierAfterField, findPostQualifiers().toList(), ::onChanged)
+            qualifierAfterField.document.addDocumentListener(autoCompleteAfter)
+            qualifierAfterField.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "commit")
+            qualifierAfterField.actionMap.put("commit", autoCompleteAfter.CommitAction())
+
             resourceField.text = prefix
             fileField.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
@@ -80,7 +93,8 @@ class ImportDialogWrapper(
             xhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
             xxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
             xxxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
-            filePanel.border = IdeBorderFactory.createTitledBorder("Select zip file with figma exported resources (JPG or PNG)")
+            filePanel.border = IdeBorderFactory.createTitledBorder("Select ZIP file with figma exported resources (JPG or PNG)")
+            qualifiersPanel.border = IdeBorderFactory.createTitledBorder("Select resource folders qualifiers (optional)")
             resourcesPanel.border = IdeBorderFactory.createTitledBorder("Select the suffixes used for each density (empty densities will be skipped)")
             moreInfoLabel.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
@@ -90,6 +104,48 @@ class ImportDialogWrapper(
         }
         updateLabels()
         return dialog.mainPanel
+    }
+
+    private fun onChanged(documentEvent: DocumentEvent) {
+        val prefix = dialog.qualifierBeforeField.text.sanitizeQualifier()
+        val suffix = dialog.qualifierAfterField.text.sanitizeQualifier()
+        val strPrefix = if (prefix.isNotBlank()) "$prefix$QUALIFIER_SEPARATOR" else ""
+        val strSuffix = if (suffix.isNotBlank()) "$QUALIFIER_SEPARATOR$suffix" else ""
+        dialog.qualifierResultLabel.text = "$QUALIFIER_INFO: $FOLDER_DRAWABLE${strPrefix}hdpi$strSuffix"
+        updateLabels()
+    }
+
+    private fun String.sanitizeQualifier() =
+        filter { it.isDigit() || it.isLetter() || it == QUALIFIER_SEPARATOR[0] }
+        .removePrefix(QUALIFIER_SEPARATOR)
+        .removeSuffix(QUALIFIER_SEPARATOR)
+
+    private fun findPreQualifiers(): Set<String> {
+        val densities = Density.values().map { it.value }.sortedDescending()
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+        return resPath.listFiles(File::isDirectory)
+            .map { it.name }
+            .filter { it.startsWith(FOLDER_DRAWABLE) && it.containsAny(densities) }
+            .map { it.removePrefix(FOLDER_DRAWABLE)
+                .substringBefore(it.findFirstOf(densities)!!)
+                .removePrefix(QUALIFIER_SEPARATOR)
+                .removeSuffix(QUALIFIER_SEPARATOR)
+            }
+            .flatMap { it.split(QUALIFIER_SEPARATOR) }
+            .filter { it.isNotBlank() }
+            .toSet()
+    }
+
+    private fun findPostQualifiers(): Set<String> {
+        val densities = Density.values().map { it.value }.sortedDescending()
+        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+        return resPath.listFiles(File::isDirectory)
+            .map { it.name }
+            .filter { it.startsWith(FOLDER_DRAWABLE) && it.containsAny(densities) }
+            .map { it.substringAfter(it.findFirstOf(densities)!!).removePrefix(QUALIFIER_SEPARATOR) }
+            .flatMap { it.split(QUALIFIER_SEPARATOR) }
+            .filter { it.isNotBlank() }
+            .toSet()
     }
 
     override fun doOKAction() {
@@ -196,8 +252,13 @@ class ImportDialogWrapper(
         }
     }
 
-    private fun Density.getFolder(): String =
-        FOLDER_DRAWABLE + (if (dialog.comboBoxField.selectedIndex == 1) DARK_MODIFIER else "") + value
+    private fun Density.getFolder(): String {
+        val preValue = dialog.qualifierBeforeField.text.sanitizeQualifier()
+        val preModifier = if (preValue.isBlank()) "" else "$preValue$QUALIFIER_SEPARATOR"
+        val postValue = dialog.qualifierAfterField.text.sanitizeQualifier()
+        val postModifier = if (postValue.isBlank()) "" else "$QUALIFIER_SEPARATOR$postValue"
+        return "$FOLDER_DRAWABLE$preModifier$value$postModifier"
+    }
 
     private fun updateLabelField(label: JLabel, field: JTextField) {
         label.isEnabled = field.text.isNotBlank()
@@ -266,7 +327,8 @@ class ImportDialogWrapper(
         private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
         private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
 
-        private const val FOLDER_DRAWABLE = "drawable-"
-        private const val DARK_MODIFIER = "night-"
+        private const val QUALIFIER_SEPARATOR = "-"
+        private const val FOLDER_DRAWABLE = "drawable$QUALIFIER_SEPARATOR"
+        private const val QUALIFIER_INFO = "drawable[-before]-density[-after]"
     }
 }

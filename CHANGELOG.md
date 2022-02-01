@@ -15,7 +15,7 @@
 
 ## [1.0.9] - 2022-01-30
 ### Added
-- Support for night modifier
+- Support for drawable folder modifiers
 - Allows skip resources when density folder don't exist
 
 ### Changed

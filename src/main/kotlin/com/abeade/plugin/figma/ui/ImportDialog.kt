@@ -10,7 +10,10 @@ class ImportDialog {
     lateinit var selectFileButton: JButton
     lateinit var resourceField: JTextField
     lateinit var overrideCheckBox: JCheckBox
-    lateinit var comboBoxField: JComboBox<String>
+    lateinit var qualifiersPanel: JPanel
+    lateinit var qualifierBeforeField: JTextField
+    lateinit var qualifierAfterField: JTextField
+    lateinit var qualifierResultLabel: JLabel
     lateinit var ldpiField: JTextField
     lateinit var rememberCheckBox: JCheckBox
     lateinit var mdpiField: JTextField
