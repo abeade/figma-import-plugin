@@ -14,7 +14,7 @@ class ImportSettingsPanelWrapper(private val propertiesComponent: PropertiesComp
     init {
         settingsPanel.resourcePrefixHelpPanel.layout = BorderLayout()
         settingsPanel.resourcePrefixHelpPanel.add(
-            ComponentPanelBuilder.createCommentComponent("Prefix used in purposed resource name.<br/>When empty no prefix will be added.", false)
+            ComponentPanelBuilder.createCommentComponent("Prefix used in purposed resource name. No prefix will be added if empty.", false)
         )
         settingsPanel.resourceCreateHelpPanel.layout = BorderLayout()
         settingsPanel.resourceCreateHelpPanel.add(
