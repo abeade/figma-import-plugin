@@ -111,7 +111,7 @@ class ImportDialogWrapper(
         val suffix = dialog.qualifierAfterField.text.sanitizeQualifier()
         val strPrefix = if (prefix.isNotBlank()) "$prefix$QUALIFIER_SEPARATOR" else ""
         val strSuffix = if (suffix.isNotBlank()) "$QUALIFIER_SEPARATOR$suffix" else ""
-        dialog.qualifierResultLabel.text = "$QUALIFIER_INFO: $FOLDER_DRAWABLE${strPrefix}hdpi$strSuffix"
+        dialog.qualifierResultLabel.text = "$FOLDER_DRAWABLE${strPrefix}hdpi$strSuffix"
         updateLabels()
     }
 
@@ -329,6 +329,5 @@ class ImportDialogWrapper(
 
         private const val QUALIFIER_SEPARATOR = "-"
         private const val FOLDER_DRAWABLE = "drawable$QUALIFIER_SEPARATOR"
-        private const val QUALIFIER_INFO = "drawable[-before]-density[-after]"
     }
 }
