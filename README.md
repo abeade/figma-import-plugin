@@ -19,15 +19,17 @@ The plugin installs one menu entry under the context menu when click over a `res
 
 ![Popup](images/popup.png)
 
-When using this option a import dialog will be shown:
+When using this option an import dialog will be shown:
 
 ![Dialog](images/dialog.png)
 
 In it you need to select the ZIP file, once selected the purpose resource name will be filled (you can change it if you need it) and matched and not matched suffixes will show an icon on right side.
 
+Optionally, you can add qualifiers to the resource folders.
+
 The "Remember suffixes" check allows to store the given suffixes for next plugin executions.
 
 # Setup
-You can change the proposed resource prefix in settings:
+You can change the proposed resource prefix and the folder creation policy in the plugin settings:
 
 ![Settings](images/settings.png)
