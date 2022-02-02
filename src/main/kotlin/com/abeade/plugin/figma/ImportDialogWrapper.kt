@@ -191,15 +191,15 @@ class ImportDialogWrapper(
         }
     }
 
-    override fun changedUpdate(p0: DocumentEvent?) {
+    override fun changedUpdate(e: DocumentEvent?) {
         updateLabels()
     }
 
-    override fun insertUpdate(p0: DocumentEvent?) {
+    override fun insertUpdate(e: DocumentEvent?) {
         updateLabels()
     }
 
-    override fun removeUpdate(p0: DocumentEvent?) {
+    override fun removeUpdate(e: DocumentEvent?) {
         updateLabels()
     }
 
