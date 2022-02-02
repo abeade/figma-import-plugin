@@ -1,0 +1,24 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.abeade.plugin.figma.import</id>
+    <name>Import Figma Resources</name>
+    <vendor email="albert.beade@gmail.com" url="https://github.com/abeade">Albert Beade</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable parentId="tools" instance="com.abeade.plugin.figma.settings.ImportSettings"
+                                 id="org.intellij.sdk.settings.AppSettingsConfigurable"
+                                 displayName="Figma Import"/>
+
+        <notificationGroup id="Figma import" displayType="BALLOON" key="notification.group.name"/>
+    </extensions>
+
+    <actions>
+        <action id="abeade.figma.ImportDialog" class="com.abeade.plugin.figma.ImportAction" text="Import Figma Resources"
+                description="Import figma resources from zip file to dpi folders">
+            <add-to-group group-id="ProjectViewPopupMenu"  anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>

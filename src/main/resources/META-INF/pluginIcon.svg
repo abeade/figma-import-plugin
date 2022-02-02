@@ -1,0 +1,14 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" version="1.1">
+
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_1">
+   <circle id="svg_2" fill="#19BCFE" clip-rule="evenodd" fill-rule="evenodd" r="85.3" cy="256" cx="341.3" class="st0"/>
+   <path id="svg_3" fill="#09CF83" clip-rule="evenodd" fill-rule="evenodd" d="m170.7,512c47.1,0 85.3,-38.2 85.3,-85.3c0,-12.9 0,-41.3 0,-85.3c-38.3,0 -66.8,0 -85.3,0c-47.1,0 -85.3,38.2 -85.3,85.3s38.1,85.3 85.3,85.3z" class="st1"/>
+   <path id="svg_4" fill="#A259FF" clip-rule="evenodd" fill-rule="evenodd" d="m170.7,341.3c15.7,0 44.2,0 85.3,0l0,-170.6c-41.2,0 -69.6,0 -85.3,0c-47.1,0 -85.3,38.2 -85.3,85.3s38.1,85.3 85.3,85.3z" class="st2"/>
+   <path id="svg_5" fill="#F24E1E" clip-rule="evenodd" fill-rule="evenodd" d="m170.7,170.7c15.7,0 44.2,0 85.3,0l0,-170.7c-41.2,0 -69.6,0 -85.3,0c-47.1,0 -85.3,38.2 -85.3,85.3s38.1,85.4 85.3,85.4z" class="st3"/>
+   <path id="svg_6" fill="#FF7262" clip-rule="evenodd" fill-rule="evenodd" d="m341.3,170.7l-85.3,0l0,-170.7l85.3,0c47.1,0 85.3,38.2 85.3,85.3s-38.1,85.4 -85.3,85.4z" class="st4"/>
+  </g>
+  <path stroke-width="0" id="svg_7" d="m425.49502,442.20724c0,-30.68008 -75.6639,-55.55124 -169.00001,-55.55124l0,-44.44099l0,0c93.33611,0 169.00001,24.87113 169.00001,55.55124l0,44.44099c0,25.33127 -52.13338,47.45444 -126.75001,53.78726l0,22.2205l-42.25,-42.67701l42.25,-46.20497l0,22.2205l0,0c50.31456,-4.27026 91.85521,-15.91172 112.64108,-31.56676" fill="#F24E1E"/>
+ </g>
+</svg>
