@@ -3,8 +3,6 @@ package com.abeade.plugin.figma.ui.autocomplete
 import javax.swing.JTextField
 import javax.swing.text.BadLocationException
 import javax.swing.SwingUtilities
-import javax.swing.AbstractAction
-import java.awt.event.ActionEvent
 import java.lang.StringBuffer
 import java.lang.Runnable
 import java.util.*
@@ -14,7 +12,7 @@ import javax.swing.event.DocumentListener
 class Autocomplete(
     private val textField: JTextField,
     keywordList: List<String>,
-    private val onChanged: (ev: DocumentEvent) -> Unit
+    private val documentListener: DocumentListener
 ) : DocumentListener {
 
     private enum class Mode {
@@ -25,15 +23,15 @@ class Autocomplete(
     private val keywords = keywordList.sorted()
 
     override fun changedUpdate(ev: DocumentEvent) {
-        onChanged(ev)
+        documentListener.changedUpdate(ev)
     }
 
     override fun removeUpdate(ev: DocumentEvent) {
-        onChanged(ev)
+        documentListener.removeUpdate(ev)
     }
 
     override fun insertUpdate(ev: DocumentEvent) {
-        onChanged(ev)
+        documentListener.insertUpdate(ev)
         if (ev.length != 1 || keywords.isEmpty()) return
         val pos = ev.offset
         var content: String? = null
@@ -78,14 +76,11 @@ class Autocomplete(
         }
     }
 
-    inner class CommitAction : AbstractAction() {
-
-        override fun actionPerformed(ev: ActionEvent) {
-            if (mode == Mode.COMPLETION) {
-                val pos = textField.selectionEnd
-                textField.caretPosition = pos
-                mode = Mode.INSERT
-            }
+    fun complete() {
+        if (mode == Mode.COMPLETION) {
+            val pos = textField.selectionEnd
+            textField.caretPosition = pos
+            mode = Mode.INSERT
         }
     }
 

@@ -11,9 +11,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.IdeBorderFactory
 import java.awt.Desktop
-import java.awt.event.KeyEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
+import java.awt.event.*
 import java.io.File
 import java.net.URI
 import java.util.zip.ZipFile
@@ -64,17 +62,8 @@ class ImportDialogWrapper(
             selectFileButton.addActionListener { openFile(directory) }
             rememberCheckBox.isSelected = saveDensities
             overrideCheckBox.isSelected = override
-
-            val autoCompleteBefore = Autocomplete(qualifierBeforeField, findPreQualifiers().toList(), ::onChanged)
-            qualifierBeforeField.document.addDocumentListener(autoCompleteBefore)
-            qualifierBeforeField.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "commit")
-            qualifierBeforeField.actionMap.put("commit", autoCompleteBefore.CommitAction())
-
-            val autoCompleteAfter = Autocomplete(qualifierAfterField, findPostQualifiers().toList(), ::onChanged)
-            qualifierAfterField.document.addDocumentListener(autoCompleteAfter)
-            qualifierAfterField.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "commit")
-            qualifierAfterField.actionMap.put("commit", autoCompleteAfter.CommitAction())
-
+            qualifierBeforeField.setupAutocomplete(findPreQualifiers().toList())
+            qualifierAfterField.setupAutocomplete(findPostQualifiers().toList())
             resourceField.text = prefix
             fileField.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
@@ -106,7 +95,31 @@ class ImportDialogWrapper(
         return dialog.mainPanel
     }
 
-    private fun onChanged(documentEvent: DocumentEvent) {
+    private fun JTextField.setupAutocomplete(keywords: List<String>) {
+        val autocomplete = Autocomplete(this, keywords, object : DocumentListener {
+            override fun insertUpdate(e: DocumentEvent?) = onChanged()
+
+            override fun removeUpdate(e: DocumentEvent?) = onChanged()
+
+            override fun changedUpdate(e: DocumentEvent?) = onChanged()
+        })
+        document.addDocumentListener(autocomplete)
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "commit")
+        actionMap.put("commit", object : AbstractAction() {
+            override fun actionPerformed(ev: ActionEvent) {
+                autocomplete.complete()
+            }
+        })
+        addFocusListener(object : FocusListener {
+            override fun focusGained(e: FocusEvent?) = Unit
+
+            override fun focusLost(e: FocusEvent?) {
+                autocomplete.complete()
+            }
+        })
+    }
+
+    private fun onChanged() {
         val prefix = dialog.qualifierBeforeField.text.sanitizeQualifier()
         val suffix = dialog.qualifierAfterField.text.sanitizeQualifier()
         val strPrefix = if (prefix.isNotBlank()) "$prefix$QUALIFIER_SEPARATOR" else ""
