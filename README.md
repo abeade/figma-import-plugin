@@ -17,11 +17,11 @@ Or you can download the latest binary from [releases](https://github.com/abeade/
 # Usage
 The plugin installs one menu entry under the context menu when click over a `res` folder in a project:
 
-![Popup](images/popup.png)
+<img src="images/popup.png" width="400" />
 
 When using this option an import dialog will be shown:
 
-![Dialog](images/dialog.png)
+<img src="images/dialog.png" width="700" />
 
 In it you need to select the ZIP file, once selected the purpose resource name will be filled (you can change it if you need it) and matched and not matched suffixes will show an icon on right side.
 
@@ -32,4 +32,4 @@ The "Remember suffixes" check allows to store the given suffixes for next plugin
 # Setup
 You can change the proposed resource prefix and the folder creation policy in the plugin settings:
 
-![Settings](images/settings.png)
+<img src="images/settings.png" width="700" />
