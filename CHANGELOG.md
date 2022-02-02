@@ -13,7 +13,7 @@
 
 ### Fixed
 
-## [1.0.9] - 2022-01-30
+## [1.1.0] - 2022-02-02
 ### Added
 - Support for drawable folder modifiers
 - Allows skip resources when density folder don't exist
