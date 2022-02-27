@@ -10,6 +10,7 @@ import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.ui.IdeBorderFactory
+import com.jetbrains.rd.util.first
 import java.awt.Desktop
 import java.awt.event.*
 import java.io.File
@@ -19,6 +20,8 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.filechooser.FileNameExtensionFilter
+import java.awt.Color
+import javax.swing.border.LineBorder
 
 class ImportDialogWrapper(
     private val propertiesComponent: PropertiesComponent,
@@ -179,16 +182,28 @@ class ImportDialogWrapper(
 
     override fun doValidate(): ValidationInfo? {
         processResult()
+        val duplicated = dialog.findFirstDuplicatedSuffix()
         return when {
             dialog.fileField.text.isEmpty() -> ValidationInfo("Zip file required", dialog.fileField)
             dialog.resourceField.text.isBlank() -> ValidationInfo("Resource name required", dialog.resourceField)
             dialog.resourceField.text.contains('.') -> ValidationInfo("Resource name should not contain extension", dialog.resourceField)
             dialog.ldpiField.text.isBlank() && dialog.mdpiField.text.isBlank() && dialog.hdpiField.text.isBlank()
                     && dialog.xhdpiField.text.isBlank() && dialog.xxhdpiField.text.isBlank() && dialog.xxxhdpiField.text.isBlank() ->
-                ValidationInfo("At least one density prefix should be defined")
+                ValidationInfo("At least one density suffix should be defined")
             result.isEmpty() -> ValidationInfo("No resource matches found! Review the prefixes and ensure you're using PNG or JPG")
+            duplicated != null -> ValidationInfo("This suffix is duplicated", duplicated)
             else -> null
         }
+    }
+
+    private fun ImportDialog.findFirstDuplicatedSuffix(): JComponent? {
+        val items = listOf(ldpiField, mdpiField, hdpiField, xhdpiField, xxhdpiField, xxxhdpiField).filterNot { it.text.isBlank() }
+        for (i in 0 until items.size - 1) {
+            for (j in i +  1 until items.size) {
+                if (items[i].text == items[j].text) return items[i]
+            }
+        }
+        return null
     }
 
     override fun changedUpdate(e: DocumentEvent?) {
