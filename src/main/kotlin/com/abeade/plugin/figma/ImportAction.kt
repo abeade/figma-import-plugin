@@ -12,6 +12,7 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.psi.PsiElement
@@ -86,7 +87,7 @@ class ImportAction : AnAction() {
             if (updatedItems == 0 && createdItems == 0) {
                 showMessage(anActionEvent.project!!, "Figma import no resources has benn created or updated", true)
             } else {
-                virtualFileRes.refresh(false, false)
+                VfsUtil.markDirtyAndRefresh(true, true, true, virtualFileRes)
                 when {
                     updatedItems == 0 -> showMessage(anActionEvent.project!!, "$createdItems resources has been created", false)
                     createdItems == 0 -> showMessage(anActionEvent.project!!, "$updatedItems resources has been updated", false)

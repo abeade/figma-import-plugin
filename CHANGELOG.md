@@ -13,6 +13,13 @@
 
 ### Fixed
 
+## [1.1.1] - 2022-02-27
+### Added
+- Duplicated suffixes validation
+
+### Fixed
+- Fixed file system refresh after files import
+
 ## [1.1.0] - 2022-02-02
 ### Added
 - Support for drawable folder modifiers
