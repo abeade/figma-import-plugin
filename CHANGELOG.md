@@ -4,7 +4,6 @@
 
 ## [Unreleased]
 ### Added
-- Resource preview popup
 
 ### Changed
 
@@ -13,6 +12,10 @@
 ### Removed
 
 ### Fixed
+
+## [1.2.0] - 2022-04-19
+### Added
+- Resource preview popup
 
 ## [1.1.1] - 2022-02-27
 ### Added
