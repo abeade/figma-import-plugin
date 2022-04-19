@@ -4,6 +4,7 @@
 
 ## [Unreleased]
 ### Added
+- Resource preview popup
 
 ### Changed
 

@@ -1,6 +1,7 @@
 package com.abeade.plugin.figma
 
 import com.abeade.plugin.figma.ui.ImportDialog
+import com.abeade.plugin.figma.ui.PreviewPanel
 import com.abeade.plugin.figma.ui.autocomplete.Autocomplete
 import com.abeade.plugin.figma.utils.EMPTY
 import com.abeade.plugin.figma.utils.containsAny
@@ -9,12 +10,18 @@ import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
+import com.intellij.openapi.ui.popup.JBPopup
+import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.IdeBorderFactory
+import com.intellij.vcs.commit.NonModalCommitPanel.Companion.showAbove
 import java.awt.Desktop
 import java.awt.event.*
+import java.awt.image.BufferedImage
 import java.io.File
+import java.io.IOException
 import java.net.URI
 import java.util.zip.ZipFile
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -90,6 +97,12 @@ class ImportDialogWrapper(
                     Desktop.getDesktop().browse(URI("https://github.com/abeade/figma-import-plugin"))
                 }
             })
+            ldpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            mdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            hdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            xhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            xxhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            xxxhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
         }
         updateLabels()
         return dialog.mainPanel
@@ -242,17 +255,25 @@ class ImportDialogWrapper(
         updateLabelField(dialog.xxxhdpiLabel, dialog.xxxhdpiField)
         zipFilesList?.let {
             val skip = propertiesComponent.isTrueValue(SKIP_KEY)
-            updateIconField(dialog.ldpiIconLabel, dialog.ldpiField, it, skip, Density.LDPI)
-            updateIconField(dialog.mdpiIconLabel, dialog.mdpiField, it, skip, Density.MDPI)
-            updateIconField(dialog.hdpiIconLabel, dialog.hdpiField, it, skip, Density.HDPI)
-            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiField, it, skip, Density.XHDPI)
-            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiField, it, skip, Density.XXHDPI)
-            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiField, it, skip, Density.XXXHDPI)
+            updateIconField(dialog.ldpiIconLabel, dialog.ldpiIconViewLabel, dialog.ldpiField, it, skip, Density.LDPI)
+            updateIconField(dialog.mdpiIconLabel, dialog.mdpiIconViewLabel, dialog.mdpiField, it, skip, Density.MDPI)
+            updateIconField(dialog.hdpiIconLabel, dialog.hdpiIconViewLabel, dialog.hdpiField, it, skip, Density.HDPI)
+            updateIconField(dialog.xhdpiIconLabel, dialog.xhdpiIconViewLabel, dialog.xhdpiField, it, skip, Density.XHDPI)
+            updateIconField(dialog.xxhdpiIconLabel, dialog.xxhdpiIconViewLabel, dialog.xxhdpiField, it, skip, Density.XXHDPI)
+            updateIconField(dialog.xxxhdpiIconLabel, dialog.xxxhdpiIconViewLabel, dialog.xxxhdpiField, it, skip, Density.XXXHDPI)
+        } ?: run {
+            dialog.ldpiIconViewLabel.isVisible = false
+            dialog.mdpiIconViewLabel.isVisible = false
+            dialog.hdpiIconViewLabel.isVisible = false
+            dialog.xhdpiIconViewLabel.isVisible = false
+            dialog.xxhdpiIconViewLabel.isVisible = false
+            dialog.xxxhdpiIconViewLabel.isVisible = false
         }
     }
 
     private fun updateIconField(
         iconLabel: JLabel,
+        viewIconLabel: JLabel,
         field: JTextField,
         filesList: MutableList<String>,
         skipWhenNotExists: Boolean,
@@ -262,19 +283,57 @@ class ImportDialogWrapper(
         val suffix = field.text
         if (suffix.isBlank()) {
             iconLabel.icon = AllIcons.General.Warning
+            viewIconLabel.isVisible = false
             iconLabel.toolTipText = "Empty suffix. Density will be skipped"
         } else if (!destinationExists && skipWhenNotExists) {
             iconLabel.icon = AllIcons.General.Warning
+            viewIconLabel.isVisible = false
             iconLabel.toolTipText = "Density folder not found, resource will be skipped<br/>You can change this in plugin settings"
         } else {
-            if (filesList.any { it.substringBeforeLast('.').endsWith(suffix) }) {
+            val file = filesList.firstOrNull { it.substringBeforeLast('.').endsWith(suffix) }
+            if (file != null) {
                 iconLabel.icon = AllIcons.General.InspectionsOK
                 iconLabel.toolTipText = "Resource found"
+                viewIconLabel.isVisible = true
+                viewIconLabel.addMouseListener(object : MouseAdapter() {
+                    private var popup: JBPopup? = null
+
+                    override fun mouseEntered(e: MouseEvent?) {
+                        popup = showPreviewPopup(file, viewIconLabel)
+                    }
+
+                    override fun mouseExited(e: MouseEvent?) {
+                        popup?.cancel()
+                        popup = null
+                    }
+                })
             } else {
                 iconLabel.icon = AllIcons.General.Error
+                viewIconLabel.isVisible = false
                 iconLabel.toolTipText = "Resource not found"
             }
         }
+    }
+
+    private fun showPreviewPopup(fileName: String, target: JComponent): JBPopup? =
+        getBufferedImage(fileName)?.let { image ->
+            val previewPanel = PreviewPanel()
+            previewPanel.quickDrawPanel.setImage(image)
+            previewPanel.labelSize.text = "${image.width} x ${image.height}"
+            val popupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(previewPanel.mainPanel, null)
+            popupBuilder.createPopup().apply { showAbove(target) }
+        }
+
+    private fun getBufferedImage(densityFile: String) = try {
+        file?.let { selectedZip ->
+            ZipFile(selectedZip).use { zipFile ->
+                zipFile.entries().toList().find { it.name.endsWith(densityFile) }?.let { entry ->
+                    ImageIO.read(zipFile.getInputStream(entry))
+                }
+            }
+        }
+    } catch (e: IOException) {
+        null
     }
 
     private fun Density.getFolder(): String {

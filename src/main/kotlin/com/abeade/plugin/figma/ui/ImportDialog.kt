@@ -34,4 +34,10 @@ class ImportDialog {
     lateinit var xxhdpiLabel: JLabel
     lateinit var xxxhdpiLabel: JLabel
     lateinit var moreInfoLabel: JLabel
+    lateinit var ldpiIconViewLabel: JLabel
+    lateinit var mdpiIconViewLabel: JLabel
+    lateinit var hdpiIconViewLabel: JLabel
+    lateinit var xhdpiIconViewLabel: JLabel
+    lateinit var xxhdpiIconViewLabel: JLabel
+    lateinit var xxxhdpiIconViewLabel: JLabel
 }
