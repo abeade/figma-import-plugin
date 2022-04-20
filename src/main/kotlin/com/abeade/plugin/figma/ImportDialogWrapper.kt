@@ -295,16 +295,10 @@ class ImportDialogWrapper(
                 iconLabel.icon = AllIcons.General.InspectionsOK
                 iconLabel.toolTipText = "Resource found"
                 viewIconLabel.isVisible = true
+                viewIconLabel.mouseListeners.forEach { viewIconLabel.removeMouseListener(it) }
                 viewIconLabel.addMouseListener(object : MouseAdapter() {
-                    private var popup: JBPopup? = null
-
-                    override fun mouseEntered(e: MouseEvent?) {
-                        popup = showPreviewPopup(file, viewIconLabel)
-                    }
-
-                    override fun mouseExited(e: MouseEvent?) {
-                        popup?.cancel()
-                        popup = null
+                    override fun mouseClicked(e: MouseEvent?) {
+                        showPreviewPopup(file, viewIconLabel)
                     }
                 })
             } else {
