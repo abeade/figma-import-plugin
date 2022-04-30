@@ -15,8 +15,8 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.vcs.commit.NonModalCommitPanel.Companion.showAbove
 import java.awt.Desktop
+import java.awt.Dimension
 import java.awt.event.*
-import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
 import java.net.URI
@@ -315,7 +315,13 @@ class ImportDialogWrapper(
             previewPanel.quickDrawPanel.setImage(image)
             previewPanel.labelSize.text = "${image.width} x ${image.height}"
             val popupBuilder = JBPopupFactory.getInstance().createComponentPopupBuilder(previewPanel.mainPanel, null)
-            popupBuilder.createPopup().apply { showAbove(target) }
+            popupBuilder.createPopup().apply {
+                size = Dimension(
+                    /* width = */ minOf(image.width, MAX_PREVIEW_SIZE) + WIDTH_PREVIEW_MARGIN,
+                    /* height = */ minOf(image.height, MAX_PREVIEW_SIZE) + HEIGHT_PREVIEW_MARGIN
+                )
+                showAbove(target)
+            }
         }
 
     private fun getBufferedImage(densityFile: String) = try {
@@ -407,5 +413,9 @@ class ImportDialogWrapper(
 
         private const val QUALIFIER_SEPARATOR = "-"
         private const val FOLDER_DRAWABLE = "drawable$QUALIFIER_SEPARATOR"
+
+        private const val MAX_PREVIEW_SIZE = 400
+        private const val WIDTH_PREVIEW_MARGIN = 4
+        private const val HEIGHT_PREVIEW_MARGIN = 26
     }
 }
