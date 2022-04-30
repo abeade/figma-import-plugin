@@ -6,8 +6,12 @@ import com.abeade.plugin.figma.ui.autocomplete.Autocomplete
 import com.abeade.plugin.figma.utils.EMPTY
 import com.abeade.plugin.figma.utils.containsAny
 import com.abeade.plugin.figma.utils.findFirstOf
+import com.abeade.plugin.figma.utils.isValidEntry
 import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationType
+import com.intellij.notification.Notifications
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.ui.popup.JBPopup
@@ -20,6 +24,7 @@ import java.awt.event.*
 import java.io.File
 import java.io.IOException
 import java.net.URI
+import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
 import javax.swing.*
@@ -103,6 +108,13 @@ class ImportDialogWrapper(
             xhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
             xxhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
             xxxhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            previewLabel.icon = AllIcons.General.InspectionsEye
+            previewLabel.isVisible = false
+            previewLabel.addMouseListener(object : MouseAdapter() {
+                override fun mouseClicked(e: MouseEvent?) {
+                    file?.let { FilePreviewDialogWrapper(it).show() }
+                }
+            })
         }
         updateLabels()
         return dialog.mainPanel
@@ -333,6 +345,14 @@ class ImportDialogWrapper(
             }
         }
     } catch (e: IOException) {
+        Notifications.Bus.notify(
+            Notification(
+                "Figma import",
+                "Error loading preview image",
+                "An error occurred processing loading image file $densityFile",
+                NotificationType.ERROR
+            )
+        )
         null
     }
 
@@ -360,12 +380,10 @@ class ImportDialogWrapper(
         if (result == JFileChooser.APPROVE_OPTION) {
             file = fileDialog.selectedFile
             dialog.fileField.text = fileDialog.selectedFile.toString()
+            dialog.previewLabel.isVisible = true
             ZipFile(fileDialog.selectedFile).use { zipFile ->
                 zipFilesList = zipFile.entries().asSequence()
-                    .filter {
-                        !it.isDirectory && (it.name.endsWith(".png", true) ||
-                                it.name.endsWith(".jpg", true))
-                    }
+                    .filter { it.isValidEntry() }
                     .fold(mutableListOf()) { list, entry -> list.apply { add(File(entry.name).name) } }
             }
             zipFilesList?.let {

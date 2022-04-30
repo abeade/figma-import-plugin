@@ -9,6 +9,7 @@ class ImportDialog {
     lateinit var fileField: JTextField
     lateinit var selectFileButton: JButton
     lateinit var resourceField: JTextField
+    lateinit var previewLabel: JLabel
     lateinit var overrideCheckBox: JCheckBox
     lateinit var qualifiersPanel: JPanel
     lateinit var qualifierBeforeField: JTextField
