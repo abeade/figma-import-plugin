@@ -4,11 +4,11 @@ import com.abeade.plugin.figma.ui.FilePreviewDialog
 import com.abeade.plugin.figma.ui.FilePreviewItem
 import com.abeade.plugin.figma.utils.isValidEntry
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.ScreenUtil
 import java.io.File
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
 import javax.swing.Action
+import javax.swing.BoxLayout
 import javax.swing.JComponent
 
 class FilePreviewDialogWrapper(
@@ -21,8 +21,9 @@ class FilePreviewDialogWrapper(
     }
 
     override fun createCenterPanel(): JComponent = FilePreviewDialog().apply {
+        contentPanel.layout = BoxLayout(contentPanel, BoxLayout.X_AXIS)
         ZipFile(file).use { zipFile ->
-            zipFile.entries().asSequence().filter { it.isValidEntry() }.sortedByDescending { it.size }.forEach { entry ->
+            zipFile.entries().asSequence().filter { it.isValidEntry() }.sortedBy { it.size }.forEach { entry ->
                 val preview = FilePreviewItem()
                 try {
                     val image = ImageIO.read(zipFile.getInputStream(entry))
@@ -37,10 +38,4 @@ class FilePreviewDialogWrapper(
     }.mainPanel
 
     override fun createActions(): Array<Action> = arrayOf(okAction)
-
-    override fun show() {
-        val rectangle = ScreenUtil.getMainScreenBounds()
-        setSize(rectangle.width, rectangle.height)
-        super.show()
-    }
 }

@@ -6,7 +6,7 @@
     </constraints>
     <properties>
       <opaque value="false"/>
-      <preferredSize width="500" height="400"/>
+      <preferredSize width="800" height="500"/>
     </properties>
     <border type="none"/>
     <children>

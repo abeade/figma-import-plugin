@@ -24,7 +24,6 @@ import java.awt.event.*
 import java.io.File
 import java.io.IOException
 import java.net.URI
-import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
 import javax.swing.*
@@ -108,7 +107,15 @@ class ImportDialogWrapper(
             xhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
             xxhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
             xxxhdpiIconViewLabel.icon = AllIcons.General.InspectionsEye
+            val previewTooltipText = "Click here to view this image"
+            ldpiIconViewLabel.toolTipText = previewTooltipText
+            mdpiIconViewLabel.toolTipText = previewTooltipText
+            hdpiIconViewLabel.toolTipText = previewTooltipText
+            xhdpiIconViewLabel.toolTipText = previewTooltipText
+            xxhdpiIconViewLabel.toolTipText = previewTooltipText
+            xxxhdpiIconViewLabel.toolTipText = previewTooltipText
             previewLabel.icon = AllIcons.General.InspectionsEye
+            previewLabel.toolTipText = "Click here to view the images in this file"
             previewLabel.isVisible = false
             previewLabel.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
