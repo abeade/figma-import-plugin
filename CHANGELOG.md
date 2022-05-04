@@ -13,6 +13,11 @@
 
 ### Fixed
 
+## [1.2.0] - 2022-05-01
+### Added
+- Preview dialog showing all images in the selected ZIP file
+- Preview popup showing image in a matched density
+
 ## [1.1.1] - 2022-02-27
 ### Added
 - Duplicated suffixes validation

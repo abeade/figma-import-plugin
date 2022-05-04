@@ -9,6 +9,7 @@ class ImportDialog {
     lateinit var fileField: JTextField
     lateinit var selectFileButton: JButton
     lateinit var resourceField: JTextField
+    lateinit var previewLabel: JLabel
     lateinit var overrideCheckBox: JCheckBox
     lateinit var qualifiersPanel: JPanel
     lateinit var qualifierBeforeField: JTextField
@@ -34,4 +35,10 @@ class ImportDialog {
     lateinit var xxhdpiLabel: JLabel
     lateinit var xxxhdpiLabel: JLabel
     lateinit var moreInfoLabel: JLabel
+    lateinit var ldpiIconViewLabel: JLabel
+    lateinit var mdpiIconViewLabel: JLabel
+    lateinit var hdpiIconViewLabel: JLabel
+    lateinit var xhdpiIconViewLabel: JLabel
+    lateinit var xxhdpiIconViewLabel: JLabel
+    lateinit var xxxhdpiIconViewLabel: JLabel
 }
