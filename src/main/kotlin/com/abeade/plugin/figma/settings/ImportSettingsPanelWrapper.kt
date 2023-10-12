@@ -3,24 +3,29 @@ package com.abeade.plugin.figma.settings
 import com.abeade.plugin.figma.ImportDialogWrapper
 import com.abeade.plugin.figma.ui.ImportSettingsPanel
 import com.intellij.ide.util.PropertiesComponent
-import com.intellij.openapi.ui.panel.ComponentPanelBuilder
-import java.awt.BorderLayout
+import com.intellij.ui.RelativeFont
+import com.intellij.util.ui.JBUI
+import java.awt.Font
 import javax.swing.JPanel
+import javax.swing.plaf.FontUIResource
 
 class ImportSettingsPanelWrapper(private val propertiesComponent: PropertiesComponent) {
 
     private val settingsPanel = ImportSettingsPanel()
 
     init {
-        settingsPanel.resourcePrefixHelpPanel.layout = BorderLayout()
-        settingsPanel.resourcePrefixHelpPanel.add(
-            ComponentPanelBuilder.createCommentComponent("Prefix used in purposed resource name. No prefix will be added if empty.", false)
-        )
-        settingsPanel.resourceCreateHelpPanel.layout = BorderLayout()
-        settingsPanel.resourceCreateHelpPanel.add(
-            ComponentPanelBuilder.createCommentComponent("Avoids to auto create missing density folders.<br/>When a resource has no destination density folder it will be skipped.", false)
-        )
+        settingsPanel.resourcePrefixHelpLabel.apply {
+            foreground = JBUI.CurrentTheme.ContextHelp.FOREGROUND
+            font = getCommentFont(font)
+        }
+        settingsPanel.resourceCreateHelpLabel.apply {
+            foreground = JBUI.CurrentTheme.ContextHelp.FOREGROUND
+            font = getCommentFont(font)
+        }
     }
+
+    private fun getCommentFont(font: Font?): Font =
+        FontUIResource(RelativeFont.NORMAL.fromResource("ContextHelp.fontSizeOffset", -2).derive(font))
 
     val isModified: Boolean
         get() = settingsPanel.resourcePrefixTextField.text != getCurrentPrefix() ||
