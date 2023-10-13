@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.changelog.date
@@ -78,9 +79,10 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
-            changelog.run {
-                getOrNull(properties("pluginVersion")) ?: getLatest()
-            }.toHTML()
+            changelog.renderItem(
+                changelog.run { getOrNull(properties("pluginVersion")) ?: getLatest() },
+                Changelog.OutputType.HTML
+            )
         })
     }
 
@@ -94,7 +96,10 @@ tasks {
             System.getenv("PRIVATE_KEY") ?:
             if (System.getenv("CI").toBoolean()) null else File(".cert/private.pem").readText(Charsets.UTF_8)
         )
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+        password.set(
+            System.getenv("PRIVATE_KEY_PASSWORD") ?:
+            if (System.getenv("CI").toBoolean()) null else File(".cert/private_key_password.txt").readText(Charsets.UTF_8)
+        )
     }
 
     publishPlugin {

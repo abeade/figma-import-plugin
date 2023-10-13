@@ -14,13 +14,11 @@
 
 ### Fixed
 
-## [1.2.1] - 2023-10-12
+## 1.2.1 - 2023-10-12
 
 ### Changed
 
-- Target 2022.2 IC
-- Since Build to 203.0
-- Until Build to 221.*
+- Updated compatibility range
 
 ### Fixed
 
