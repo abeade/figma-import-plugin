@@ -80,7 +80,9 @@ tasks {
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider {
             changelog.renderItem(
-                changelog.run { getOrNull(properties("pluginVersion")) ?: getLatest() },
+                changelog.run { getOrNull(properties("pluginVersion")) ?: getLatest() }
+                    .withHeader(false)
+                    .withEmptySections(false),
                 Changelog.OutputType.HTML
             )
         })
