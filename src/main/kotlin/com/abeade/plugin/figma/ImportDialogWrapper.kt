@@ -3,11 +3,7 @@ package com.abeade.plugin.figma
 import com.abeade.plugin.figma.ui.ImportDialog
 import com.abeade.plugin.figma.ui.PreviewPanel
 import com.abeade.plugin.figma.ui.autocomplete.Autocomplete
-import com.abeade.plugin.figma.utils.EMPTY
-import com.abeade.plugin.figma.utils.containsAny
-import com.abeade.plugin.figma.utils.findFirstOf
-import com.abeade.plugin.figma.utils.isValidEntry
-import com.abeade.plugin.figma.utils.showAbove
+import com.abeade.plugin.figma.utils.*
 import com.intellij.icons.AllIcons
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.Notification
@@ -17,13 +13,9 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.ui.popup.JBPopup
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.openapi.ui.popup.JBPopupListener
-import com.intellij.openapi.ui.popup.LightweightWindowEvent
 import com.intellij.ui.IdeBorderFactory
-import com.intellij.ui.awt.RelativePoint
 import java.awt.Desktop
 import java.awt.Dimension
-import java.awt.Point
 import java.awt.event.*
 import java.io.File
 import java.io.IOException
