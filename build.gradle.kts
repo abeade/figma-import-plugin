@@ -108,15 +108,15 @@ tasks {
 
         certificateChain.set(
             System.getenv("CERTIFICATE_CHAIN") ?:
-            if (System.getenv("CI").toBoolean()) null else File(".cert/chain.crt").readText(Charsets.UTF_8)
+            if (File(".cert/chain.crt").exists()) File(".cert/chain.crt").readText(Charsets.UTF_8) else null
         )
         privateKey.set(
             System.getenv("PRIVATE_KEY") ?:
-            if (System.getenv("CI").toBoolean()) null else File(".cert/private.pem").readText(Charsets.UTF_8)
+            if (File(".cert/private.pem").exists()) File(".cert/private.pem").readText(Charsets.UTF_8) else null
         )
         password.set(
             System.getenv("PRIVATE_KEY_PASSWORD") ?:
-            if (System.getenv("CI").toBoolean()) null else File(".cert/private_key_password.txt").readText(Charsets.UTF_8)
+            if (File(".cert/private_key_password.txt").exists()) File(".cert/private_key_password.txt").readText(Charsets.UTF_8) else null
         )
     }
 
