@@ -105,19 +105,21 @@ tasks {
     }
 
     signPlugin {
+        version = properties("pluginVersion").get()
 
-        certificateChain.set(
-            System.getenv("CERTIFICATE_CHAIN") ?:
-            if (File(".cert/chain.crt").exists()) File(".cert/chain.crt").readText(Charsets.UTF_8) else null
-        )
-        privateKey.set(
-            System.getenv("PRIVATE_KEY") ?:
-            if (File(".cert/private.pem").exists()) File(".cert/private.pem").readText(Charsets.UTF_8) else null
-        )
-        password.set(
-            System.getenv("PRIVATE_KEY_PASSWORD") ?:
-            if (File(".cert/private_key_password.txt").exists()) File(".cert/private_key_password.txt").readText(Charsets.UTF_8) else null
-        )
+        certificateChain = environment("CERTIFICATE_CHAIN")
+        privateKey = environment("PRIVATE_KEY")
+        password = environment("PRIVATE_KEY_PASSWORD")
+
+        if (!certificateChain.isPresent && File(".cert/chain.crt").exists()) {
+            certificateChain.set(File(".cert/chain.crt").readText(Charsets.UTF_8))
+        }
+        if (!privateKey.isPresent && File(".cert/private.pem").exists()) {
+            privateKey.set(File(".cert/private.pem").readText(Charsets.UTF_8))
+        }
+        if (!password.isPresent && File(".cert/private_key_password.txt").exists()) {
+            password.set(File(".cert/private_key_password.txt").readText(Charsets.UTF_8))
+        }
     }
 
     publishPlugin {
