@@ -35,5 +35,5 @@ private fun getMinSdkVersion(facet: AndroidFacet): AndroidVersion {
         return DumbService.getInstance(facet.module.project)
             .runReadActionInSmartMode<AndroidVersion> { facet.queryMinSdkAndTargetSdkFromManifestIndex().minSdk }
     } catch (_: IndexNotReadyException) { }
-    return MergedManifestManager.getSnapshot(facet).minSdkVersion
+    return MergedManifestManager.getMergedManifestSupplier(facet.module).get().get().minSdkVersion
 }
