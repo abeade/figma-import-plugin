@@ -45,7 +45,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 17
 
       # Setup Gradle
       - name: Setup Gradle
@@ -120,7 +120,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 17
 
       # Run Qodana inspections
       - name: Qodana - Code Inspection
@@ -151,7 +151,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 17
 
       # Setup Gradle
       - name: Setup Gradle
@@ -198,7 +198,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 17
 
       # Remove old release drafts by using the curl request for the available releases with a draft flag
       - name: Remove Old Release Drafts
