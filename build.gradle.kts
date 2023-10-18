@@ -131,6 +131,6 @@ tasks {
     }
 
     runIde {
-        ideDir = file("C:\\Users\\alber\\AppData\\Local\\Programs\\Android Studio")
+        ideDir = file("C:/Users/alber/AppData/Local/Programs/Android Studio")
     }
 }
