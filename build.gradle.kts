@@ -26,7 +26,7 @@ repositories {
 kotlin {
     @Suppress("UnstableApiUsage")
     jvmToolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(17)
         vendor = JvmVendorSpec.JETBRAINS
     }
 }
@@ -75,7 +75,6 @@ tasks {
     patchPluginXml {
         version = properties("pluginVersion")
         sinceBuild = properties("pluginSinceBuild")
-        untilBuild = properties("pluginUntilBuild")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
@@ -129,5 +128,9 @@ tasks {
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels = properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) }
+    }
+
+    runIde {
+        ideDir = file("C:\\Users\\alber\\AppData\\Local\\Programs\\Android Studio")
     }
 }

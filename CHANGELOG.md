@@ -6,6 +6,8 @@
 
 ### Added
 
+- Allows to launch the Android Studio PNG to WEBP conversion
+
 ### Changed
 
 ### Deprecated

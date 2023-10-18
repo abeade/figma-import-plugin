@@ -17,6 +17,7 @@ class ImportDialog {
     lateinit var qualifierResultLabel: JLabel
     lateinit var ldpiField: JTextField
     lateinit var rememberCheckBox: JCheckBox
+    lateinit var checkBoxWebP: JCheckBox
     lateinit var mdpiField: JTextField
     lateinit var hdpiField: JTextField
     lateinit var xhdpiField: JTextField

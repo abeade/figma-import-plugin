@@ -1,5 +1,7 @@
 package com.abeade.plugin.figma
 
+import com.abeade.plugin.figma.utils.getMinSdkVersion
+import com.android.tools.idea.rendering.webp.ConvertToWebpAction
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
@@ -12,6 +14,7 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.ui.popup.Balloon
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.WindowManager
@@ -44,6 +47,7 @@ class ImportAction : AnAction() {
         val dialog = ImportDialogWrapper(PropertiesComponent.getInstance(), resPath)
         val result = dialog.showAndGet()
         if (result) {
+            val destinationFiles = mutableListOf<File>()
             var createdItems = 0
             var updatedItems = 0
             val data = dialog.importData!!
@@ -75,6 +79,7 @@ class ImportAction : AnAction() {
                             } else {
                                 createdItems++
                             }
+                            destinationFiles.add(destinationFile)
                             val inStream = zipFile.getInputStream(it)
                             val outStream = FileOutputStream(destinationFile)
                             FileUtil.copy(inStream, outStream)
@@ -85,13 +90,24 @@ class ImportAction : AnAction() {
                 }
             }
             if (updatedItems == 0 && createdItems == 0) {
-                showMessage(anActionEvent.project!!, "Figma import no resources has benn created or updated", true)
+                showMessage(anActionEvent.project!!, "Figma import no resources has been created or updated", true)
             } else {
-                VfsUtil.markDirtyAndRefresh(true, true, true, virtualFileRes)
+                VfsUtil.markDirtyAndRefresh(
+                    /* async = */ !data.launchWebPConversion,
+                    /* recursive = */ true,
+                    /* reloadChildren = */ true,
+                    /* ...files = */ virtualFileRes)
                 when {
                     updatedItems == 0 -> showMessage(anActionEvent.project!!, "$createdItems resources has been created", false)
                     createdItems == 0 -> showMessage(anActionEvent.project!!, "$updatedItems resources has been updated", false)
                     else -> showMessage(anActionEvent.project!!, "$createdItems resources has been created and $updatedItems resources has been updated", false)
+                }
+                if (data.launchWebPConversion) {
+                    val localFileSystem = LocalFileSystem.getInstance()
+                    val array = destinationFiles.mapNotNull { localFileSystem.findFileByIoFile(it) }.toTypedArray()
+                    if (array.isNotEmpty()) {
+                        ConvertToWebpAction().perform(anActionEvent.project!!, anActionEvent.getMinSdkVersion(), array)
+                    }
                 }
             }
         }
