@@ -129,8 +129,4 @@ tasks {
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
         channels = properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) }
     }
-
-    runIde {
-        ideDir = file("C:/Users/alber/AppData/Local/Programs/Android Studio")
-    }
 }
