@@ -64,6 +64,7 @@ class ImportDialogWrapper(
         val override = propertiesComponent.getBoolean(OVERRIDE_KEY, true)
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
         val prefix = propertiesComponent.getValue(PREFIX_KEY) ?: RESOURCE_PREFIX
+        val launchWebP = propertiesComponent.getBoolean(WEBP_KEY)
 
         dialog = ImportDialog().apply {
             selectFileButton.addActionListener { openFile(directory) }
@@ -83,6 +84,7 @@ class ImportDialogWrapper(
             xhdpiField.text = xhdpi
             xxhdpiField.text = xxhdpi
             xxxhdpiField.text = xxxhdpi
+            checkBoxWebP.isSelected = launchWebP
             ldpiField.document.addDocumentListener(this@ImportDialogWrapper)
             mdpiField.document.addDocumentListener(this@ImportDialogWrapper)
             hdpiField.document.addDocumentListener(this@ImportDialogWrapper)
@@ -163,7 +165,6 @@ class ImportDialogWrapper(
 
     private fun findPreQualifiers(): Set<String> {
         val densities = Density.values().map { it.value }.sortedDescending()
-        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         return resPath.listFiles(File::isDirectory)
             .map { it.name }
             .filter { it.startsWith(FOLDER_DRAWABLE) && it.containsAny(densities) }
@@ -179,7 +180,6 @@ class ImportDialogWrapper(
 
     private fun findPostQualifiers(): Set<String> {
         val densities = Density.values().map { it.value }.sortedDescending()
-        @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         return resPath.listFiles(File::isDirectory)
             .map { it.name }
             .filter { it.startsWith(FOLDER_DRAWABLE) && it.containsAny(densities) }
@@ -191,7 +191,14 @@ class ImportDialogWrapper(
 
     override fun doOKAction() {
         val skip =  propertiesComponent.isTrueValue(SKIP_KEY)
-        data = ImportData(file, dialog.resourceField.text, result, dialog.overrideCheckBox.isSelected, skip)
+        data = ImportData(
+            file = file,
+            resource = dialog.resourceField.text,
+            matches = result,
+            confirmOverride = dialog.overrideCheckBox.isSelected,
+            skipResourcesWithNoFolder = skip,
+            launchWebPConversion = dialog.checkBoxWebP.isSelected
+        )
         val remember = dialog.rememberCheckBox.isSelected
         propertiesComponent.setValue(LDPI_KEY, dialog.ldpiField.text.takeIf { remember })
         propertiesComponent.setValue(MDPI_KEY, dialog.mdpiField.text.takeIf { remember })
@@ -202,6 +209,7 @@ class ImportDialogWrapper(
         propertiesComponent.setValue(SAVE_KEY, remember)
         propertiesComponent.setValue(OVERRIDE_KEY, dialog.overrideCheckBox.isSelected)
         propertiesComponent.setValue(DIRECTORY_KEY, file?.parent)
+        propertiesComponent.setValue(WEBP_KEY, dialog.checkBoxWebP.isSelected)
         super.doOKAction()
     }
 
@@ -431,6 +439,7 @@ class ImportDialogWrapper(
         private const val OVERRIDE_KEY = "#com.abeade.plugin.figma.importDialog.override"
         private const val DIRECTORY_KEY = "#com.abeade.plugin.figma.importDialog.directory"
         private const val DIMENSION_SERVICE_KEY = "#com.abeade.plugin.figma.importDialog"
+        private const val WEBP_KEY = "#com.abeade.plugin.figma.importDialog.launchWebP"
 
         private const val QUALIFIER_SEPARATOR = "-"
         private const val FOLDER_DRAWABLE = "drawable$QUALIFIER_SEPARATOR"

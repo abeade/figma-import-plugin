@@ -14,6 +14,12 @@
 
 ### Fixed
 
+## 1.3.0 - 2023-10-23
+
+### Added
+
+- Allows to launch the WebP conversion when import finishes
+
 ## 1.2.1 - 2023-10-12
 
 ### Changed

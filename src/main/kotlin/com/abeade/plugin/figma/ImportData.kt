@@ -8,4 +8,5 @@ data class ImportData(
     val matches: Map<String, String>,
     val confirmOverride: Boolean,
     val skipResourcesWithNoFolder: Boolean,
+    val launchWebPConversion: Boolean,
 )

@@ -29,6 +29,8 @@ Optionally, you can add qualifiers to the resource folders.
 
 The "Remember suffixes" check allows to store the given suffixes for next plugin executions.
 
+By selecting "Launch WebP conversion after import" check, the WebP conversion will be executed over the imported resources.
+
 # Setup
 You can change the proposed resource prefix and the folder creation policy in the plugin settings:
 

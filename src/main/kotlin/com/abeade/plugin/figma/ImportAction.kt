@@ -1,23 +1,20 @@
 package com.abeade.plugin.figma
 
+import com.abeade.plugin.figma.utils.getMinSdkVersion
+import com.android.tools.idea.rendering.webp.ConvertToWebpAction
 import com.intellij.ide.util.PropertiesComponent
-import com.intellij.notification.Notification
+import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
-import com.intellij.notification.Notifications
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.MessageType
-import com.intellij.openapi.ui.popup.Balloon
-import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.WindowManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.file.PsiDirectoryImpl
-import com.intellij.ui.awt.RelativePoint
 import java.io.File
 import java.io.FileOutputStream
 import java.util.zip.ZipEntry
@@ -40,10 +37,12 @@ class ImportAction : AnAction() {
     }
 
     override fun actionPerformed(anActionEvent: AnActionEvent) {
+        val project = anActionEvent.project ?: return
         val resPath = File(virtualFileRes.path)
         val dialog = ImportDialogWrapper(PropertiesComponent.getInstance(), resPath)
         val result = dialog.showAndGet()
         if (result) {
+            val destinationFiles = mutableListOf<File>()
             var createdItems = 0
             var updatedItems = 0
             val data = dialog.importData!!
@@ -56,7 +55,11 @@ class ImportAction : AnAction() {
                     if (existingDensities.isNotEmpty() &&
                         !ImportConfirmationDialogWrapper(data.resource, existingDensities).showAndGet()
                     ) {
-                        showMessage(anActionEvent.project!!, "Import was cancelled by user. No resources has been created nor updated.", true)
+                        showNotification(
+                            project = project,
+                            message = "Import was cancelled by user.<br/>No resources has been created nor updated.",
+                            type = NotificationType.WARNING
+                        )
                         return
                     }
                 }
@@ -75,6 +78,7 @@ class ImportAction : AnAction() {
                             } else {
                                 createdItems++
                             }
+                            destinationFiles.add(destinationFile)
                             val inStream = zipFile.getInputStream(it)
                             val outStream = FileOutputStream(destinationFile)
                             FileUtil.copy(inStream, outStream)
@@ -85,13 +89,27 @@ class ImportAction : AnAction() {
                 }
             }
             if (updatedItems == 0 && createdItems == 0) {
-                showMessage(anActionEvent.project!!, "Figma import no resources has benn created or updated", true)
+                showNotification(
+                    project = project,
+                    message = "No resources has been created nor updated.",
+                    type = NotificationType.ERROR
+                )
             } else {
-                VfsUtil.markDirtyAndRefresh(true, true, true, virtualFileRes)
-                when {
-                    updatedItems == 0 -> showMessage(anActionEvent.project!!, "$createdItems resources has been created", false)
-                    createdItems == 0 -> showMessage(anActionEvent.project!!, "$updatedItems resources has been updated", false)
-                    else -> showMessage(anActionEvent.project!!, "$createdItems resources has been created and $updatedItems resources has been updated", false)
+                VfsUtil.markDirtyAndRefresh(
+                    /* async = */ !data.launchWebPConversion,
+                    /* recursive = */ true,
+                    /* reloadChildren = */ true,
+                    /* ...files = */ virtualFileRes)
+                val message = when {
+                    updatedItems == 0 -> "$createdItems resources has been created"
+                    createdItems == 0 -> "$updatedItems resources has been updated"
+                    else -> "$createdItems resources has been created and $updatedItems resources has been updated"
+                }
+                showNotification(project = project, message = message, type = NotificationType.INFORMATION)
+                if (data.launchWebPConversion) {
+                    val localFileSystem = LocalFileSystem.getInstance()
+                    val array = destinationFiles.mapNotNull { localFileSystem.findFileByIoFile(it) }.toTypedArray()
+                    ConvertToWebpAction().perform(project, anActionEvent.getMinSdkVersion(), array)
                 }
             }
         }
@@ -114,20 +132,11 @@ class ImportAction : AnAction() {
         list
     }
 
-    private fun showMessage(project: Project, message: String, isError: Boolean) {
-        Notifications.Bus.notify(Notification(
-            "Figma import",
-            "Figma import finished",
-            message,
-            if (isError) NotificationType.ERROR else NotificationType.INFORMATION
-        ))
-        val statusBar = WindowManager.getInstance()
-            ?.getStatusBar(project)
-        JBPopupFactory.getInstance()
-            ?.createHtmlTextBalloonBuilder(message, if (isError) MessageType.ERROR else MessageType.INFO, null)
-            ?.setFadeoutTime(5000)
-            ?.createBalloon()
-            ?.show(RelativePoint.getCenterOf(statusBar?.component!!), Balloon.Position.above)
+    private fun showNotification(project: Project, message: String, type: NotificationType) {
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup("Figma import")
+            .createNotification(message, type)
+            .notify(project)
     }
 
     private companion object {
