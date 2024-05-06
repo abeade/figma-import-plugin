@@ -4,6 +4,8 @@
     <name>Import Figma Resources</name>
     <vendor email="albert.beade@gmail.com" url="https://github.com/abeade">Albert Beade</vendor>
 
+    <idea-version since-build="223" />
+
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
     <depends>org.jetbrains.android</depends>

@@ -37,6 +37,9 @@ intellij {
     version = properties("platformVersion")
     type = properties("platformType")
 
+    // For no substitution of since-build and until-build attributes - read more: https://plugins.jetbrains.com/docs/intellij/configuring-plugin-project.html#patching-the-plugin-configuration-file
+    updateSinceUntilBuild = false
+
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
     plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
 }
@@ -74,7 +77,7 @@ tasks {
 
     patchPluginXml {
         version = properties("pluginVersion")
-        sinceBuild = properties("pluginSinceBuild")
+        // sinceBuild = properties("pluginSinceBuild")
         // untilBuild = properties("pluginUntilBuild")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
