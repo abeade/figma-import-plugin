@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/figma-import-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/figma-import-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/figma-import-plugin-new.iml" filepath="$PROJECT_DIR$/.idea/figma-import-plugin-new.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/figma-import-plugin-new.main.iml" filepath="$PROJECT_DIR$/.idea/modules/figma-import-plugin-new.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/figma-import-plugin-new.test.iml" filepath="$PROJECT_DIR$/.idea/modules/figma-import-plugin-new.test.iml" />

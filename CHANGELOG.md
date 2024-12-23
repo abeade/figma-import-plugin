@@ -14,6 +14,12 @@
 
 ### Fixed
 
+## 1.3.2 - 2024-12-23
+
+### Fixed
+
+-  Fixed wrong dialog height
+
 ## 1.3.1 - 2024-05-06
 
 ### Changed
