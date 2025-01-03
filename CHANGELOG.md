@@ -6,8 +6,6 @@
 
 ### Added
 
-- Allows to target mipmap folders
-
 ### Changed
 
 ### Deprecated
@@ -16,11 +14,17 @@
 
 ### Fixed
 
+## 1.4.0 - 2025-01-03
+
+### Added
+
+- Allows to target mipmap folders
+
 ## 1.3.2 - 2024-12-23
 
 ### Fixed
 
--  Fixed wrong dialog height
+- Fixed wrong dialog height
 
 ## 1.3.1 - 2024-05-06
 
