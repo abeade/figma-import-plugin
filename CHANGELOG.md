@@ -6,6 +6,8 @@
 
 ### Added
 
+- Allows to target mipmap folders
+
 ### Changed
 
 ### Deprecated

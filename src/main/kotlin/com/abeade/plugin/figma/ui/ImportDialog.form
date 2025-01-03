@@ -3,11 +3,11 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="780" height="640"/>
+      <xy x="20" y="20" width="780" height="670"/>
     </constraints>
     <properties>
-      <minimumSize width="780" height="630"/>
-      <preferredSize width="780" height="630"/>
+      <minimumSize width="780" height="650"/>
+      <preferredSize width="780" height="650"/>
     </properties>
     <border type="none"/>
     <children>
@@ -301,7 +301,7 @@
           </component>
         </children>
       </grid>
-      <grid id="17d64" binding="qualifiersPanel" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="17d64" binding="qualifiersPanel" layout-manager="GridLayoutManager" row-count="5" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -311,17 +311,17 @@
         <children>
           <component id="2021" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="89" height="16"/>
               </grid>
             </constraints>
             <properties>
-              <text value="Qualifiers:          "/>
+              <text value="Qualifiers (optional):"/>
             </properties>
           </component>
           <component id="454a" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="before"/>
@@ -329,7 +329,7 @@
           </component>
           <component id="cba9" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="after"/>
@@ -337,7 +337,7 @@
           </component>
           <component id="5a1ee" class="javax.swing.JTextField" binding="qualifierBeforeField">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -345,23 +345,29 @@
           </component>
           <component id="e9802" class="javax.swing.JTextField" binding="qualifierAfterField">
             <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
             <properties/>
           </component>
-          <grid id="d7384" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+          <grid id="d7384" layout-manager="FlowLayout" hgap="0" vgap="5" flow-align="0">
             <constraints>
-              <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
+              <component id="e9f67" class="javax.swing.JLabel" binding="qualifierTypeLabel">
+                <constraints/>
+                <properties>
+                  <text value="drawable"/>
+                </properties>
+              </component>
               <component id="d448a" class="javax.swing.JLabel">
                 <constraints/>
                 <properties>
-                  <text value="drawable[-before]-density[-after]   Result:"/>
+                  <text value="[-before]-density[-after]   Result: "/>
                 </properties>
               </component>
               <component id="e4eb5" class="javax.swing.JLabel" binding="qualifierResultLabel">
@@ -372,6 +378,49 @@
               </component>
             </children>
           </grid>
+          <component id="81308" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Resource type:"/>
+            </properties>
+          </component>
+          <grid id="2d7e9" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="50" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="9c4d2" class="javax.swing.JRadioButton" binding="typeDrawableRadioButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <selected value="true"/>
+                  <text value="drawable"/>
+                </properties>
+              </component>
+              <component id="89d77" class="javax.swing.JRadioButton" binding="typeMipmapRadioButton">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="mipmap"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <vspacer id="864c4">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="1" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="5"/>
+                <maximum-size width="-1" height="5"/>
+              </grid>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
       <grid id="9d93b" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
