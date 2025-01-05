@@ -14,11 +14,23 @@
 
 ### Fixed
 
-## 1.4.0 - 2025-01-03
+## 1.4.0 - 2025-01-05
 
 ### Added
 
 - Allows to target mipmap folders
+
+### Changed
+
+- Migrate to [IntelliJ Platform Gradle Plugin 2.0](https://blog.jetbrains.com/platform/2024/07/intellij-platform-gradle-plugin-2-0/).
+- Using [Android plugin](https://plugins.jetbrains.com/plugin/22989-android) version [233.15619.7](https://plugins.jetbrains.com/plugin/22989-android/versions/stable/598665)
+- Update platformVersion to 2023.3.8
+- Change since build to 233 (2023.3)
+- Dependencies - upgrade `org.jetbrains.kotlin.jvm` to `1.9.25`
+- Dependencies - upgrade `org.jetbrains.kotlinx.kover` to `0.8.3`
+- Dependencies - upgrade `org.jetbrains.intellij.platform` to `2.1.0`
+- Dependencies - upgrade `org.jetbrains.qodana` to `2024.2.3`
+- Dependencies - upgrade `org.jetbrains.changelog` to `2.2.1`
 
 ## 1.3.2 - 2024-12-23
 

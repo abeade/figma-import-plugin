@@ -4,17 +4,17 @@ import com.android.sdklib.AndroidVersion
 import com.android.tools.idea.model.AndroidModel
 import com.android.tools.idea.model.MergedManifestManager
 import com.android.tools.idea.model.queryMinSdkAndTargetSdkFromManifestIndex
+import com.android.tools.idea.util.CommonAndroidUtil
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.DumbService
 import org.jetbrains.android.facet.AndroidFacet
-import org.jetbrains.kotlin.idea.base.util.isAndroidModule
 
 fun AnActionEvent.getMinSdkVersion(): Int {
     val module: Module? = getData(LangDataKeys.MODULE) ?: getData(LangDataKeys.MODULE_CONTEXT)
     var minSdkVersion: Int = Int.MAX_VALUE
-    if (module != null && module.isAndroidModule()) {
+    if (module != null && CommonAndroidUtil.getInstance().isAndroidProject(module.project)) {
         val facet = AndroidFacet.getInstance(module)
         if (facet != null) {
             val minSdk = getMinSdkVersion(facet)
