@@ -1,6 +1,8 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.changelog.date
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -14,8 +16,8 @@ plugins {
     alias(libs.plugins.kover) // Gradle Kover Plugin
 }
 
-group = providers.gradleProperty("pluginGroup").get()
-version = providers.gradleProperty("pluginVersion").get()
+group = properties("pluginGroup").get()
+version = properties("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
 kotlin {
@@ -37,13 +39,13 @@ dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
+        create(properties("platformType"), properties("platformVersion"))
 
         // Plugin Dependencies. Uses `platformBundledPlugins` property from the gradle.properties file for bundled IntelliJ Platform plugins.
-        bundledPlugins(providers.gradleProperty("platformBundledPlugins").map { it.split(',') })
+        bundledPlugins(properties("platformBundledPlugins").map { it.split(',') })
 
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
-        plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
+        plugins(properties("platformPlugins").map { it.split(',') })
 
         pluginVerifier()
         zipSigner()
@@ -53,8 +55,8 @@ dependencies {
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
 intellijPlatform {
     pluginConfiguration {
-        name = providers.gradleProperty("pluginName")
-        version = providers.gradleProperty("pluginVersion")
+        name = properties("pluginName")
+        version = properties("pluginVersion")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
         description = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
@@ -71,7 +73,7 @@ intellijPlatform {
 
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
-        changeNotes = providers.gradleProperty("pluginVersion").map { pluginVersion ->
+        changeNotes = properties("pluginVersion").map { pluginVersion ->
             with(changelog) {
                 renderItem(
                     (getOrNull(pluginVersion) ?: getUnreleased())
@@ -83,7 +85,7 @@ intellijPlatform {
         }
 
         ideaVersion {
-            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            sinceBuild = properties("pluginSinceBuild")
             untilBuild = provider { null }
         }
     }
@@ -105,11 +107,11 @@ intellijPlatform {
     }
 
     publishing {
-        token = providers.environmentVariable("PUBLISH_TOKEN")
+        token = environment("PUBLISH_TOKEN")
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = providers.gradleProperty("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+        channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
     pluginVerification {
@@ -143,10 +145,19 @@ kover {
 
 tasks {
     wrapper {
-        gradleVersion = providers.gradleProperty("gradleVersion").get()
+        gradleVersion = properties("gradleVersion").get()
     }
 
     publishPlugin {
         dependsOn(patchChangelog)
     }
+}
+
+val runAndroidStudio by intellijPlatformTesting.runIde.registering {
+    type = IntelliJPlatformType.AndroidStudio
+    version = "2024.2.1.9"
+}
+
+tasks.withType(RunIdeTask::class) {
+    maxHeapSize = "4g"
 }
