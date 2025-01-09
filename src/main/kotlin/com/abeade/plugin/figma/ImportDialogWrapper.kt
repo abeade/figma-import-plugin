@@ -49,6 +49,10 @@ class ImportDialogWrapper(
     private var file: File? = null
     private var zipFilesList: MutableList<String>? = null
     private var resource: String? = null
+    private var destinationFolder: String = FOLDER_DRAWABLE
+
+    private val destinationFolderPrefix: String
+        get() = "$destinationFolder$QUALIFIER_SEPARATOR"
 
     override fun getDimensionServiceKey(): String = DIMENSION_SERVICE_KEY
 
@@ -65,11 +69,24 @@ class ImportDialogWrapper(
         val directory = propertiesComponent.getValue(DIRECTORY_KEY)
         val prefix = propertiesComponent.getValue(PREFIX_KEY) ?: RESOURCE_PREFIX
         val launchWebP = propertiesComponent.getBoolean(WEBP_KEY)
+        destinationFolder = FOLDER_DRAWABLE
 
         dialog = ImportDialog().apply {
             selectFileButton.addActionListener { openFile(directory) }
             rememberCheckBox.isSelected = saveDensities
             overrideCheckBox.isSelected = override
+            typeDrawableRadioButton.addActionListener {
+                destinationFolder = FOLDER_DRAWABLE
+                onChanged()
+            }
+            typeMipmapRadioButton.addActionListener {
+                destinationFolder = FOLDER_MIPMAP
+                onChanged()
+            }
+            typeButtonGroup = ButtonGroup().apply {
+                add(typeDrawableRadioButton)
+                add(typeMipmapRadioButton)
+            }
             qualifierBeforeField.setupAutocomplete(findPreQualifiers().toList())
             qualifierAfterField.setupAutocomplete(findPostQualifiers().toList())
             resourceField.text = prefix
@@ -92,7 +109,7 @@ class ImportDialogWrapper(
             xxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
             xxxhdpiField.document.addDocumentListener(this@ImportDialogWrapper)
             filePanel.border = IdeBorderFactory.createTitledBorder("Select ZIP file with figma exported resources (JPG or PNG)")
-            qualifiersPanel.border = IdeBorderFactory.createTitledBorder("Select resource folders qualifiers (optional)")
+            qualifiersPanel.border = IdeBorderFactory.createTitledBorder("Select resource type and qualifiers")
             resourcesPanel.border = IdeBorderFactory.createTitledBorder("Select the suffixes used for each density (empty densities will be skipped)")
             moreInfoLabel.addMouseListener(object : MouseAdapter() {
                 override fun mouseClicked(e: MouseEvent?) {
@@ -154,7 +171,8 @@ class ImportDialogWrapper(
         val suffix = dialog.qualifierAfterField.text.sanitizeQualifier()
         val strPrefix = if (prefix.isNotBlank()) "$prefix$QUALIFIER_SEPARATOR" else ""
         val strSuffix = if (suffix.isNotBlank()) "$QUALIFIER_SEPARATOR$suffix" else ""
-        dialog.qualifierResultLabel.text = "$FOLDER_DRAWABLE${strPrefix}hdpi$strSuffix"
+        dialog.qualifierTypeLabel.text = destinationFolder
+        dialog.qualifierResultLabel.text = "${destinationFolderPrefix}${strPrefix}hdpi$strSuffix"
         updateLabels()
     }
 
@@ -166,9 +184,10 @@ class ImportDialogWrapper(
     private fun findPreQualifiers(): Set<String> {
         val densities = Density.values().map { it.value }.sortedDescending()
         return resPath.listFiles(File::isDirectory)
+            .asSequence()
             .map { it.name }
-            .filter { it.startsWith(FOLDER_DRAWABLE) && it.containsAny(densities) }
-            .map { it.removePrefix(FOLDER_DRAWABLE)
+            .filter { it.startsWith(destinationFolderPrefix) && it.containsAny(densities) }
+            .map { it.removePrefix(destinationFolderPrefix)
                 .substringBefore(it.findFirstOf(densities)!!)
                 .removePrefix(QUALIFIER_SEPARATOR)
                 .removeSuffix(QUALIFIER_SEPARATOR)
@@ -181,8 +200,9 @@ class ImportDialogWrapper(
     private fun findPostQualifiers(): Set<String> {
         val densities = Density.values().map { it.value }.sortedDescending()
         return resPath.listFiles(File::isDirectory)
+            .asSequence()
             .map { it.name }
-            .filter { it.startsWith(FOLDER_DRAWABLE) && it.containsAny(densities) }
+            .filter { it.startsWith(destinationFolderPrefix) && it.containsAny(densities) }
             .map { it.substringAfter(it.findFirstOf(densities)!!).removePrefix(QUALIFIER_SEPARATOR) }
             .flatMap { it.split(QUALIFIER_SEPARATOR) }
             .filter { it.isNotBlank() }
@@ -372,7 +392,7 @@ class ImportDialogWrapper(
         val preModifier = if (preValue.isBlank()) "" else "$preValue$QUALIFIER_SEPARATOR"
         val postValue = dialog.qualifierAfterField.text.sanitizeQualifier()
         val postModifier = if (postValue.isBlank()) "" else "$QUALIFIER_SEPARATOR$postValue"
-        return "$FOLDER_DRAWABLE$preModifier$value$postModifier"
+        return "${destinationFolderPrefix}$preModifier$value$postModifier"
     }
 
     private fun updateLabelField(label: JLabel, field: JTextField) {
@@ -442,7 +462,8 @@ class ImportDialogWrapper(
         private const val WEBP_KEY = "#com.abeade.plugin.figma.importDialog.launchWebP"
 
         private const val QUALIFIER_SEPARATOR = "-"
-        private const val FOLDER_DRAWABLE = "drawable$QUALIFIER_SEPARATOR"
+        private const val FOLDER_DRAWABLE = "drawable"
+        private const val FOLDER_MIPMAP = "mipmap"
 
         private const val MAX_PREVIEW_SIZE = 400
         private const val WIDTH_PREVIEW_MARGIN = 4

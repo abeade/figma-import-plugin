@@ -9,11 +9,15 @@ class ImportDialog {
     lateinit var fileField: JTextField
     lateinit var selectFileButton: JButton
     lateinit var resourceField: JTextField
+    lateinit var typeDrawableRadioButton: JRadioButton
+    lateinit var typeMipmapRadioButton: JRadioButton
+    lateinit var typeButtonGroup: ButtonGroup
     lateinit var previewLabel: JLabel
     lateinit var overrideCheckBox: JCheckBox
     lateinit var qualifiersPanel: JPanel
     lateinit var qualifierBeforeField: JTextField
     lateinit var qualifierAfterField: JTextField
+    lateinit var qualifierTypeLabel: JLabel
     lateinit var qualifierResultLabel: JLabel
     lateinit var ldpiField: JTextField
     lateinit var rememberCheckBox: JCheckBox
