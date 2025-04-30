@@ -29,13 +29,12 @@ class ImportAction : AnAction() {
 
     override fun update(anActionEvent: AnActionEvent) {
         val project = anActionEvent.project
-        val psiElement: PsiElement? = anActionEvent.dataContext.getData(PlatformDataKeys.PSI_ELEMENT)
-        val isValid = project != null && psiElement != null &&
-                (psiElement as? PsiDirectoryImpl)?.isDirectory == true &&
-                psiElement.name == RES_DIRECTORY
+        val psiElement = anActionEvent.getData(PlatformDataKeys.PSI_ELEMENT)
+        val resDirectory = psiElement as? PsiDirectoryImpl
+        val isValid = project != null && resDirectory?.isDirectory == true && resDirectory.name == RES_DIRECTORY
         anActionEvent.presentation.isEnabledAndVisible = isValid
         if (isValid) {
-            virtualFileRes = (psiElement as PsiDirectoryImpl).virtualFile
+            virtualFileRes = resDirectory!!.virtualFile
         }
     }
 
