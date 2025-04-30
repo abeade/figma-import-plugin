@@ -14,6 +14,8 @@
 
 ### Fixed
 
+- Plugin not working on AS Meerkat due to missing action update thread
+
 ## 1.4.0 - 2025-01-05
 
 ### Added
