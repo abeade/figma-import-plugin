@@ -5,6 +5,7 @@ import com.android.tools.idea.rendering.webp.ConvertToWebpAction
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
@@ -24,12 +25,14 @@ class ImportAction : AnAction() {
 
     private lateinit var virtualFileRes: VirtualFile
 
+    override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
+
     override fun update(anActionEvent: AnActionEvent) {
         val project = anActionEvent.project
         val psiElement: PsiElement? = anActionEvent.dataContext.getData(PlatformDataKeys.PSI_ELEMENT)
         val isValid = project != null && psiElement != null &&
                 (psiElement as? PsiDirectoryImpl)?.isDirectory == true &&
-                (psiElement as? PsiDirectoryImpl)?.name == RES_DIRECTORY
+                psiElement.name == RES_DIRECTORY
         anActionEvent.presentation.isEnabledAndVisible = isValid
         if (isValid) {
             virtualFileRes = (psiElement as PsiDirectoryImpl).virtualFile
