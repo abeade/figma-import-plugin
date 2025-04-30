@@ -7,8 +7,10 @@ import com.android.tools.idea.model.queryMinSdkAndTargetSdkFromManifestIndex
 import com.android.tools.idea.util.CommonAndroidUtil
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.module.Module
-import com.intellij.openapi.project.DumbService
+import com.intellij.openapi.progress.ProcessCanceledException
+import com.intellij.openapi.project.Project
 import org.jetbrains.android.facet.AndroidFacet
 
 fun AnActionEvent.getMinSdkVersion(): Int {
@@ -17,17 +19,21 @@ fun AnActionEvent.getMinSdkVersion(): Int {
     if (module != null && CommonAndroidUtil.getInstance().isAndroidProject(module.project)) {
         val facet = AndroidFacet.getInstance(module)
         if (facet != null) {
-            val minSdk = getMinSdkVersion(facet)
+            val minSdk = getMinSdkVersion(facet, module.project)
             minSdkVersion = minSdk?.featureLevel ?: Int.MAX_VALUE
         }
     }
     return minSdkVersion
 }
 
-private fun getMinSdkVersion(facet: AndroidFacet): AndroidVersion? = AndroidModel.get(facet)?.minSdkVersion
+private fun getMinSdkVersion(facet: AndroidFacet, project: Project): AndroidVersion? = AndroidModel.get(facet)?.minSdkVersion
     ?: try {
-        DumbService.getInstance(facet.module.project)
-            .runReadActionInSmartMode<AndroidVersion> { facet.queryMinSdkAndTargetSdkFromManifestIndex().minSdk }
+        ReadAction
+            .nonBlocking<AndroidVersion> { facet.queryMinSdkAndTargetSdkFromManifestIndex().minSdk }
+            .inSmartMode(project)
+            .executeSynchronously()
+    } catch (e: ProcessCanceledException) {
+        throw e
     } catch (_: Exception) {
         try {
             MergedManifestManager.getMergedManifestSupplier(facet.module).get().get().minSdkVersion

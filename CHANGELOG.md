@@ -16,6 +16,10 @@
 
 ## 1.4.1 - 2025-04-30
 
+### Changed
+
+- Updated getMinSdkVersion function to avoid usage of deprecated API
+
 ### Fixed
 
 - Plugin not working on AS Meerkat due to missing action update thread
