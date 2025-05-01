@@ -153,7 +153,7 @@ tasks {
 
 val runAndroidStudio by intellijPlatformTesting.runIde.registering {
     type = IntelliJPlatformType.AndroidStudio
-    version = "2024.2.1.9"
+    version = "2024.3.1.2"
 }
 
 tasks.withType(RunIdeTask::class) {
